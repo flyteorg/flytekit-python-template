@@ -1,1 +1,0 @@
-{{ registration.project }}{{ registration.domain }}"7workflows.getting_started.edge_detection.EdgeDetectorWf*{{ registration.version }}
