@@ -1,4 +1,3 @@
-
 # This is used by the image building script referenced below. Normally it just takes the directory name but in this
 # case we want it to be called something else.
 IMAGE_NAME=flytekit-python-template
@@ -19,6 +18,9 @@ endif
 
 # The Flyte project that we want to register under
 PROJECT=flyteexamples
+# If you want to create a new project, in an environment with flytekit installed run the following:
+# flyte-cli register-project -h localhost:30081 -i - myflyteproject --name "My Flyte Project" \
+#      --description "My very first project getting started on Flyte"
 
 .SILENT: help
 .PHONY: help
@@ -37,3 +39,20 @@ debug:
 .PHONY: docker_build
 docker_build:
 	NOPUSH=1 IMAGE_NAME=${IMAGE_NAME} flytekit_build_image.sh ./Dockerfile ${PREFIX}
+
+# The sandbox targets below allow you to upload your code to your hosted Flyte sandbox.
+# Simply run `make register_sandbox` to trigger the sequence.
+.PHONY: in_container_serialize_sandbox
+in_container_serialize_sandbox:
+	pyflyte --config /root/flyte.config serialize workflows -f /tmp/output
+
+.PHONY: register_sandbox
+register_sandbox: docker_build serialize_sandbox
+	flyte-cli register-files -i -p ${PROJECT} -d development -v ${VERSION} -h localhost ${CURDIR}/_pb_output/*
+
+.PHONY: serialize_sandbox
+serialize_sandbox: docker_build
+	echo ${CURDIR}
+	rm -rf ${CURDIR}/_pb_output || true
+	mkdir ${CURDIR}/_pb_output || true
+	docker run -v ${CURDIR}/_pb_output:/tmp/output ${FULL_IMAGE_NAME}:${VERSION} make in_container_serialize_sandbox
