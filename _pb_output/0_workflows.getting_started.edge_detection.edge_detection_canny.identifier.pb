@@ -1,0 +1,1 @@
+{{ registration.project }}{{ registration.domain }}"=workflows.getting_started.edge_detection.edge_detection_canny*{{ registration.version }}

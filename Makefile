@@ -48,7 +48,7 @@ in_container_serialize_sandbox:
 
 .PHONY: register_sandbox
 register_sandbox: docker_build serialize_sandbox
-	flyte-cli register-files -i -p ${PROJECT} -d development -v ${VERSION} -h localhost ${CURDIR}/_pb_output/*
+	flyte-cli register-files -i -p ${PROJECT} -d development -v ${VERSION} -h localhost:80 ${CURDIR}/_pb_output/*
 
 .PHONY: serialize_sandbox
 serialize_sandbox: docker_build
