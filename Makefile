@@ -3,6 +3,10 @@
 IMAGE_NAME=flytekit-python-template
 VERSION=$(shell ./version.sh)
 
+# If you're port-forwarding your service or running the sandbox Flyte deployment you can leave this is as is.
+# If you want to use a secure channel with ssl enabled, be sure **not** to use the insecure flag.
+INSECURE=-i
+
 define PIP_COMPILE
 pip-compile $(1) --upgrade --verbose
 endef
@@ -18,6 +22,7 @@ endif
 
 # The Flyte project that we want to register under
 PROJECT=flyteexamples
+DOMAIN=development
 # If you want to create a new project, in an environment with flytekit installed run the following:
 # flyte-cli register-project -h localhost:30081 -i - myflyteproject --name "My Flyte Project" \
 #      --description "My very first project getting started on Flyte"
@@ -44,11 +49,11 @@ docker_build:
 # Simply run `make register_sandbox` to trigger the sequence.
 .PHONY: in_container_serialize_sandbox
 in_container_serialize_sandbox:
-	pyflyte --config /root/flyte.config serialize workflows -f /tmp/output
+	pyflyte serialize workflows -f /tmp/output
 
 .PHONY: register_sandbox
 register_sandbox: docker_build serialize_sandbox
-	flyte-cli register-files -i -p ${PROJECT} -d development -v ${VERSION} -h ${FLYTE_HOST} ${CURDIR}/_pb_output/*
+	flyte-cli register-files ${INSECURE} -p ${PROJECT} -d ${DOMAIN} -v ${VERSION} -h ${FLYTE_HOST} ${CURDIR}/_pb_output/*
 
 .PHONY: serialize_sandbox
 serialize_sandbox: docker_build
