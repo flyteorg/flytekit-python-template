@@ -20,11 +20,11 @@ else
 	FULL_IMAGE_NAME = ${IMAGE_NAME}
 endif
 
-# The Flyte project that we want to register under
+# The Flyte project and domain that we want to register under
 PROJECT=flyteexamples
 DOMAIN=development
 # If you want to create a new project, in an environment with flytekit installed run the following:
-# flyte-cli register-project -h localhost:30081 -i - myflyteproject --name "My Flyte Project" \
+# flyte-cli register-project -h ${FLYTE_HOST} -i - myflyteproject --name "My Flyte Project" \
 #      --description "My very first project getting started on Flyte"
 
 .SILENT: help
