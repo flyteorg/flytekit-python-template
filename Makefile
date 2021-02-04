@@ -48,8 +48,7 @@ docker_build:
 # The sandbox targets below allow you to upload your code to your hosted Flyte sandbox.
 # Simply run `make register_sandbox` to trigger the sequence.
 .PHONY: register_sandbox
-register_sandbox: docker_build
-    pyflyte  --pkgs myapp.workflows serialize  --image ${FULL_IMAGE_NAME}:${VERSION} workflows -f _pb_output
+register_sandbox: docker_build serialize_sandbox
 	flyte-cli register-files ${INSECURE} -p ${PROJECT} -d ${DOMAIN} -v ${VERSION} -h ${FLYTE_HOST} ${CURDIR}/_pb_output/*
 
 .PHONY: serialize_sandbox
@@ -57,4 +56,4 @@ serialize_sandbox: docker_build
 	echo ${CURDIR}
 	rm -rf ${CURDIR}/_pb_output || true
 	mkdir ${CURDIR}/_pb_output || true
-	docker run -v ${CURDIR}/_pb_output:/tmp/output ${FULL_IMAGE_NAME}:${VERSION} make in_container_serialize_sandbox
+    pyflyte  --pkgs myapp.workflows serialize  --image ${FULL_IMAGE_NAME}:${VERSION} workflows -f _pb_output
