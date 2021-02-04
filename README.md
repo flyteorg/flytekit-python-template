@@ -15,7 +15,10 @@ kubectl -n flyte port-forward svc/envoy 8001:80
 
 and then verify you can access [localhost:8001/console](localhost:8001/console).
 
-In the case of a remote deployment you'll need to enable port-forwarding to easily access your workflows and seamlessly register them.
+In the case of a remote deployment you'll need to enable port-forwarding to easily access your workflows and seamlessly register them,
+in the case that the deployment endpoint is not publicly available.
+
+Otherwise, access the remote deployment using ``http://<external-ip>/console``
 
 * Register this template repo against your sandbox like so, substituting whichever host:port combination you are using:
 
