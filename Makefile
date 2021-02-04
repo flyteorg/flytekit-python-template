@@ -27,6 +27,9 @@ DOMAIN=development
 # flyte-cli register-project -h ${FLYTE_HOST} -i - myflyteproject --name "My Flyte Project" \
 #      --description "My very first project getting started on Flyte"
 
+# The Flyte deployment endpoint. Be sure to override using your remote deployment endpoint if applicable.
+FLYTE_HOST=localhost:80
+
 .SILENT: help
 .PHONY: help
 help:
