@@ -20,8 +20,8 @@ in the case that the deployment endpoint is not publicly available.
 
 Otherwise, access the remote deployment using ``http://<external-ip>/console``
 
-* Register this template repo against your sandbox like so, substituting whichever host:port combination you are using:
+* Register this template repo against your Flyte deployment like so, substituting whichever host:port combination you are using:
 
 ```shell
-FLYTE_HOST=localhost:80 make register_sandbox
+FLYTE_HOST=localhost:80 make register
 ```
