@@ -48,11 +48,8 @@ natsort==7.1.1
     #   flytekit
 numpy==1.20.0
     # via
-    #   opencv-python
     #   pandas
     #   pyarrow
-opencv-python==4.5.1.48
-    # via -r requirements.in
 pandas==1.2.1
     # via flytekit
 pathspec==0.8.1
