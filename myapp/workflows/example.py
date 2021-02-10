@@ -8,5 +8,5 @@ def greet(name: str) -> str:
 
 @workflow
 def hello_world(name: str = "world") -> str:
-    edges = greet(name=name)
-    return edges
+    greeting = greet(name=name)
+    return greeting
