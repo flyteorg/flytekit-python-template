@@ -59,8 +59,6 @@ docker_build:
 # Run `make fast_register` to trigger the sequence.
 .PHONY: fast_register
 fast_register: fast_serialize
-	echo ${DISABLE_MINIO}
-	echo ${MINIO_PREFIX}
 	flyte-cli fast-register-files -h ${FLYTE_HOST} ${INSECURE} -p ${PROJECT} -d ${DOMAIN} \
 		--additional-distribution-dir ${ADDL_DISTRIBUTION_DIR} _pb_output/*
 
