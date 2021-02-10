@@ -20,6 +20,17 @@ else
 	FULL_IMAGE_NAME = ${IMAGE_NAME}
 endif
 
+# The Flyte deployment endpoint. Be sure to override using your remote deployment endpoint if applicable.
+FLYTE_HOST=localhost:30081
+
+# In order to use fast_register with minio you must port-forward the service to MINIO_ENDPOINT or the default, localhost:9000
+MINIO_ENDPOINT=localhost:9000
+ifeq ($(origin DISABLE_MINIO), undefined)
+	MINIO_PREFIX = FLYTE_AWS_ENDPOINT=http://$(MINIO_ENDPOINT)/ FLYTE_AWS_ACCESS_KEY_ID=minio FLYTE_AWS_SECRET_ACCESS_KEY=miniostorage
+else
+	MINIO_PREFIX =
+endif
+
 # The Flyte project and domain that we want to register under
 PROJECT=flyteexamples
 DOMAIN=development
@@ -27,8 +38,12 @@ DOMAIN=development
 # flyte-cli register-project -h ${FLYTE_HOST} -i - myflyteproject --name "My Flyte Project" \
 #      --description "My very first project getting started on Flyte"
 
-# The Flyte deployment endpoint. Be sure to override using your remote deployment endpoint if applicable.
-FLYTE_HOST=localhost:80
+
+# This specifies where fast-registered code is uploaded to during registration.
+# If you're not using the standard minio deployment on flyte sandbox: update this path to something that
+#   - you have write access to
+#   - flytepropeller can read (depending on the role it uses)
+ADDL_DISTRIBUTION_DIR=s3://my-s3-bucket/flyte-fast-distributions
 
 .SILENT: help
 .PHONY: help
@@ -48,11 +63,27 @@ debug:
 docker_build:
 	NOPUSH=1 IMAGE_NAME=${IMAGE_NAME} flytekit_build_image.sh ./Dockerfile ${PREFIX}
 
-# The sandbox targets below allow you to upload your code to your hosted Flyte sandbox.
-# Simply run `make register_sandbox` to trigger the sequence.
+# The fast register and serialize targets below allow to you rapidly register your updated code with your Flyte deployment.
+# Run `make fast_register` to trigger the sequence.
+.PHONY: fast_register
+fast_register: fast_serialize
+	echo ${DISABLE_MINIO}
+	echo ${MINIO_PREFIX}
+	${MINIO_PREFIX} flyte-cli fast-register-files -h ${FLYTE_HOST} ${INSECURE} -p ${PROJECT} -d ${DOMAIN} \
+		--additional-distribution-dir ${ADDL_DISTRIBUTION_DIR} _pb_output/*
+
+.PHONY: fast_serialize
+fast_serialize:
+	echo ${CURDIR}
+	mkdir ${CURDIR}/_pb_output || true
+	rm ${CURDIR}/_pb_output/* || true
+	pyflyte --pkgs myapp.workflows serialize --in-container-config-path /root/flyte.config --image ghcr.io/flyteorg/flytekit-python-template:latest fast workflows -f _pb_output/
+
+# The register and serialize targets below allow you to upload your code to your Flyte deployment.
+# Simply run `make register` to trigger the sequence.
 .PHONY: register
 register: docker_build serialize
-	flyte-cli register-files ${INSECURE} -p ${PROJECT} -d ${DOMAIN} -v ${VERSION} -h ${FLYTE_HOST} ${CURDIR}/_pb_output/*
+	flyte-cli register-files -h ${FLYTE_HOST} ${INSECURE} -p ${PROJECT} -d ${DOMAIN} -v ${VERSION} ${CURDIR}/_pb_output/*
 
 
 .PHONY: serialize
