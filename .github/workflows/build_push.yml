@@ -1,7 +1,7 @@
 name: Build and Push Docker Images
 
 on:
-  pull_request:
+  push: 
   create:
     tags:
       - v*
