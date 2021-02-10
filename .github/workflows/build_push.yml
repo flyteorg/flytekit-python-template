@@ -24,7 +24,7 @@ jobs:
           username: "${{ secrets.FLYTE_BOT_USERNAME }}"
           password: "${{ secrets.FLYTE_BOT_PAT }}"
           image_name: ${{ github.repository_owner }}/flytekit-python-template
-          image_tag: latest,${{ github.sha }},${{ github.event.ref }}
+          image_tag: latest,${{ github.sha }}
           push_git_tag: true
           registry: ghcr.io
           build_extra_args: "--compress=true"
