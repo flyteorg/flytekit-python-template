@@ -23,14 +23,6 @@ endif
 # The Flyte deployment endpoint. Be sure to override using your remote deployment endpoint if applicable.
 FLYTE_HOST=localhost:30081
 
-# In order to use fast_register with minio you must port-forward the service to MINIO_ENDPOINT or the default, localhost:9000
-MINIO_ENDPOINT=http://localhost:9000
-ifeq ($(origin DISABLE_MINIO), undefined)
-	MINIO_PREFIX = FLYTE_AWS_ENDPOINT=$(MINIO_ENDPOINT) FLYTE_AWS_ACCESS_KEY_ID=minio FLYTE_AWS_SECRET_ACCESS_KEY=miniostorage
-else
-	MINIO_PREFIX =
-endif
-
 # The Flyte project and domain that we want to register under
 PROJECT=flyteexamples
 DOMAIN=development
@@ -69,7 +61,7 @@ docker_build:
 fast_register: fast_serialize
 	echo ${DISABLE_MINIO}
 	echo ${MINIO_PREFIX}
-	${MINIO_PREFIX} flyte-cli fast-register-files -h ${FLYTE_HOST} ${INSECURE} -p ${PROJECT} -d ${DOMAIN} \
+	flyte-cli fast-register-files -h ${FLYTE_HOST} ${INSECURE} -p ${PROJECT} -d ${DOMAIN} \
 		--additional-distribution-dir ${ADDL_DISTRIBUTION_DIR} _pb_output/*
 
 .PHONY: fast_serialize
