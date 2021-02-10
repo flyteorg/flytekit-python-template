@@ -24,9 +24,9 @@ endif
 FLYTE_HOST=localhost:30081
 
 # In order to use fast_register with minio you must port-forward the service to MINIO_ENDPOINT or the default, localhost:9000
-MINIO_ENDPOINT=localhost:9000
+MINIO_ENDPOINT=http://localhost:9000
 ifeq ($(origin DISABLE_MINIO), undefined)
-	MINIO_PREFIX = FLYTE_AWS_ENDPOINT=http://$(MINIO_ENDPOINT)/ FLYTE_AWS_ACCESS_KEY_ID=minio FLYTE_AWS_SECRET_ACCESS_KEY=miniostorage
+	MINIO_PREFIX = FLYTE_AWS_ENDPOINT=$(MINIO_ENDPOINT) FLYTE_AWS_ACCESS_KEY_ID=minio FLYTE_AWS_SECRET_ACCESS_KEY=miniostorage
 else
 	MINIO_PREFIX =
 endif
