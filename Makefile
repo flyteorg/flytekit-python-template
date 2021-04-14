@@ -5,7 +5,11 @@ VERSION=$(shell ./version.sh)
 
 # If you're port-forwarding your service or running the sandbox Flyte deployment you can leave this is as is.
 # If you want to use a secure channel with ssl enabled, be sure **not** to use the insecure flag.
-INSECURE=-i
+ifeq ($(origin INSECURE), "true")
+	INSECURE=-i
+else
+	INSECURE=
+endif
 
 define PIP_COMPILE
 pip-compile $(1) --upgrade --verbose
@@ -21,7 +25,9 @@ else
 endif
 
 # The Flyte deployment endpoint. Be sure to override using your remote deployment endpoint if applicable.
-FLYTE_HOST=localhost:30081
+ifeq ($(origin FLYTE_HOST), undefined)
+	FLYTE_HOST=localhost:30081
+endif
 
 # The Flyte project and domain that we want to register under
 PROJECT=flyteexamples
@@ -53,7 +59,7 @@ debug:
 
 .PHONY: docker_build
 docker_build:
-	NOPUSH=1 IMAGE_NAME=${IMAGE_NAME} flytekit_build_image.sh ./Dockerfile ${PREFIX}
+	IMAGE_NAME=${IMAGE_NAME} flytekit_build_image.sh ./Dockerfile ${PREFIX}
 
 # The fast register and serialize targets below allow to you rapidly register your updated code with your Flyte deployment.
 # Run `make fast_register` to trigger the sequence.
@@ -65,7 +71,7 @@ fast_register: fast_serialize
 .PHONY: fast_serialize
 fast_serialize:
 	echo ${CURDIR}
-	mkdir ${CURDIR}/_pb_output || true
+	mkdir ${CURDIR}/_pb_output || trues
 	rm ${CURDIR}/_pb_output/* || true
 	pyflyte --pkgs myapp.workflows serialize --in-container-config-path /root/flyte.config --image ghcr.io/flyteorg/flytekit-python-template:latest fast workflows -f _pb_output/
 
