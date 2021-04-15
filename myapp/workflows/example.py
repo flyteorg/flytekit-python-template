@@ -3,7 +3,7 @@ from flytekit import task, workflow
 
 @task
 def greet(name: str) -> str:
-    return f"Hello, {first_name} {last_name}"
+    return f"Hello, {name}"
 
 
 @workflow
