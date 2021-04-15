@@ -5,7 +5,17 @@ VERSION=$(shell ./version.sh)
 
 # If you're port-forwarding your service or running the sandbox Flyte deployment you can leave this is as is.
 # If you want to use a secure channel with ssl enabled, be sure **not** to use the insecure flag.
-INSECURE=-i
+ifeq ($(INSECURE), "true")
+	INSECURE=-i
+endif
+
+ifeq ($(NOPUSH), "true")
+	NOPUSH=1
+endif
+
+ifndef SERVICE_ACCOUNT
+	SERVICE_ACCOUNT=default
+endif
 
 define PIP_COMPILE
 pip-compile $(1) --upgrade --verbose
@@ -21,11 +31,11 @@ else
 endif
 
 # The Flyte deployment endpoint. Be sure to override using your remote deployment endpoint if applicable.
-FLYTE_HOST=localhost:30081
+export FLYTE_HOST ?= localhost:30081
 
 # The Flyte project and domain that we want to register under
-PROJECT=flyteexamples
-DOMAIN=development
+export PROJECT ?= flyteexamples
+export DOMAIN ?= development
 # If you want to create a new project, in an environment with flytekit installed run the following:
 # flyte-cli register-project -h ${FLYTE_HOST} -i - myflyteproject --name "My Flyte Project" \
 #      --description "My very first project getting started on Flyte"
@@ -35,7 +45,7 @@ DOMAIN=development
 # If you're not using the standard minio deployment on flyte sandbox: update this path to something that
 #   - you have write access to
 #   - flytepropeller can read (depending on the role it uses)
-ADDL_DISTRIBUTION_DIR=s3://my-s3-bucket/flyte-fast-distributions
+export ADDL_DISTRIBUTION_DIR ?= s3://my-s3-bucket/flyte-fast-distributions
 
 .SILENT: help
 .PHONY: help
@@ -53,7 +63,7 @@ debug:
 
 .PHONY: docker_build
 docker_build:
-	NOPUSH=1 IMAGE_NAME=${IMAGE_NAME} flytekit_build_image.sh ./Dockerfile ${PREFIX}
+	NOPUSH=${NOPUSH} IMAGE_NAME=${IMAGE_NAME} flytekit_build_image.sh ./Dockerfile ${PREFIX}
 
 # The fast register and serialize targets below allow to you rapidly register your updated code with your Flyte deployment.
 # Run `make fast_register` to trigger the sequence.
@@ -67,7 +77,7 @@ fast_serialize:
 	echo ${CURDIR}
 	mkdir ${CURDIR}/_pb_output || true
 	rm ${CURDIR}/_pb_output/* || true
-	pyflyte --pkgs myapp.workflows serialize --in-container-config-path /root/flyte.config --image ghcr.io/flyteorg/flytekit-python-template:latest fast workflows -f _pb_output/
+	pyflyte -c flyte.config --pkgs myapp.workflows serialize --in-container-config-path /root/flyte.config --image ghcr.io/flyteorg/flytekit-python-template:latest fast workflows -f _pb_output/
 
 # The register and serialize targets below allow you to upload your code to your Flyte deployment.
 # Simply run `make register` to trigger the sequence.
@@ -81,4 +91,4 @@ serialize:
 	echo ${CURDIR}
 	rm -rf ${CURDIR}/_pb_output || true
 	mkdir ${CURDIR}/_pb_output || true
-	pyflyte --pkgs myapp.workflows serialize --in-container-config-path /root/flyte.config --image ${FULL_IMAGE_NAME}:${VERSION} workflows -f _pb_output
+	pyflyte -c flyte.config --pkgs myapp.workflows serialize --in-container-config-path /root/flyte.config --image ${FULL_IMAGE_NAME}:${VERSION} workflows -f _pb_output
