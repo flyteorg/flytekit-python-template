@@ -11,11 +11,11 @@ VERSION=$(shell ./version.sh)
 
 # If you're port-forwarding your service or running the sandbox Flyte deployment you can leave this is as is.
 # If you want to use a secure channel with ssl enabled, be sure **not** to use the insecure flag.
-ifeq ($(INSECURE), "true")
+ifeq ($(INSECURE), true)
 	INSECURE=-i
 endif
 
-ifeq ($(NOPUSH), "true")
+ifeq ($(NOPUSH), true)
 	NOPUSH=1
 endif
 
