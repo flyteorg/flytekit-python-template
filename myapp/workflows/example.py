@@ -10,3 +10,7 @@ def greet(name: str) -> str:
 def hello_world(name: str = "world") -> str:
     greeting = greet(name=name)
     return greeting
+
+
+if __name__ == "__main__":
+    hello_world()
