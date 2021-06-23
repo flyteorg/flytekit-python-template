@@ -19,7 +19,9 @@ do
            echo "  a: APP_NAME or the REPOSITORY APP_NAME. Defaults to myapp."
            echo "  r = REGISTRY name where the docker container should be pushed. Defaults to none - localhost"
            echo "  v = VERSION of the build. Defaults to using the current git head SHA"
-           exit 0
+           exit 1;;
+        *) echo "Usage: ${0} [-h|[-a <app_name>][-r <registry_name>][-v <version>]]"
+           exit 1;;
     esac
 done
 
