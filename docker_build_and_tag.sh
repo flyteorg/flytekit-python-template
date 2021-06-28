@@ -42,3 +42,5 @@ fi
 
 # Should be run in the folder that has Dockerfile
 docker build --tag ${TAG} .
+
+echo "Docker image built with tag ${TAG}. You can use this image to run pyflyte package."
