@@ -134,3 +134,5 @@ dmypy.json
 # Flyte serialization artifacts
 _pb_output
 _pb_output/*
+
+flyte-package.tgz
