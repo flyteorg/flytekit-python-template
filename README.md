@@ -1,26 +1,16 @@
 # flytekit-python-template
 
-A template for the recommended layout of a Flyte enabled repository for code written in python using flytekit
+A template for the recommended layout of a Flyte enabled repository for code written in python using [flytekit](https://docs.flyte.org/projects/flytekit/en/latest/)
 
 ## Usage
 
-To get up and running with your Flyte project, we recommend proceeding through the following:
+To get up and running with your Flyte project, we recommend following the
+[Flyte getting started guide](https://docs.flyte.org/en/latest/getting_started.html)
 
-* Deploy the flyte sandbox locally or to any Kubernetes Cluster (EKS, GKE, custom, etc) by following the instructions at the [getting started guide](https://docs.flyte.org/en/latest/getting_started.html)
-* Check the status of your [local deployment](http://localhost:30081/console) and assert that it contains sample projects or in the case of a remote deployment enable port-forwarding
-   
-```shell
-kubectl -n flyte port-forward svc/envoy 8001:80
-```
 
-and then verify you can access [localhost:30081/console](localhost:30081/console).
-
-In the case of a remote deployment you'll need to enable port-forwarding to easily access your workflows and seamlessly register them, in the case that the deployment endpoint is not publicly available.
-
-Otherwise, access the remote deployment using ``http://<external-ip>/console``
-
-* Register this template repo against your Flyte deployment like so, substituting whichever host:port combination you are using:
-
-```shell
-FLYTE_HOST=<host>:<port> make register
-```
+## NOTE
+1. Once you have acquainted yourself, update the root package name from ``myapp`` -> ``your actual appnamee``
+2. This APP name is also added to ``docker_build_and_tag.sh`` - ``APP_NAME``
+3. We recommend using a git repository and this the ``docker_build_and_tag.sh``
+   to build your docker images
+4. We also recommend using pip-compile to build your requirements.
