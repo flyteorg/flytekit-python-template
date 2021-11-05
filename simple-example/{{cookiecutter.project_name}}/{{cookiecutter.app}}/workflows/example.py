@@ -20,7 +20,7 @@ from flytekit import task, workflow
 # def say_hello(name: str) -> str:
 @task
 def say_hello() -> str:
-    return f"hello, world"
+    return "hello world"
 
 
 # %%
