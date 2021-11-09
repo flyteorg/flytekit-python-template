@@ -3,10 +3,10 @@
 set -e
 
 # SET the REGISTRY here, where the docker container should be pushed
-REGISTRY=""
+REGISTRY="{{ cookiecutter.project_name }}"
 
 # SET the appname here
-APP_NAME="myapp"
+APP_NAME="{{ cookiecutter.app }}"
 
 while getopts a:r:v:h flag
 do
