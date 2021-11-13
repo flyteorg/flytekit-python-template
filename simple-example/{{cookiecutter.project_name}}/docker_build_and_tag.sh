@@ -3,7 +3,7 @@
 set -e
 
 # SET the REGISTRY here, where the docker container should be pushed
-REGISTRY="{{ cookiecutter.project_name }}"
+REGISTRY=""
 
 # SET the appname here
 APP_NAME="{{ cookiecutter.app }}"
