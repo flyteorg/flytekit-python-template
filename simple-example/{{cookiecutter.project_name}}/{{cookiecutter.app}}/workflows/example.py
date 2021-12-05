@@ -15,7 +15,7 @@ from flytekit import task, workflow
 # Here we define a task called ``say_hello``. Note the @task decorator, Flyte
 # uses this to understand that you intend to port this function to flyte.
 # If you have normal functions in this file, they are not accessible to
-# file, unless they have the @task decorator.
+# flyte, unless they have the @task decorator.
 # You can change the signature of the task to take in an argument like this:
 # def say_hello(name: str) -> str:
 @task
