@@ -24,7 +24,7 @@ def say_hello() -> str:
 
 
 # %%
-# Here we declare a workflow called ``my_wf``. Note the @workflow decorator,
+# Here we declare a workflow called ``{{cookiecutter.workflow}}``. Note the @workflow decorator,
 # Flyte finds all workflows that you have declared by finding this decorator.
 # A @workflow function, looks like a regular python function, except for some
 # important differences, it is never executed by flyte-engine. It is like
@@ -39,9 +39,9 @@ def say_hello() -> str:
 # You can treat the outputs of a task as you normally would a Python function. Assign the output to two variables
 # and use them in subsequent tasks as normal. See :py:func:`flytekit.workflow`
 # You can change the signature of the workflow to take in an argument like this:
-# def my_wf(name: str) -> str:
+# def {{cookiecutter.workflow}}(name: str) -> str:
 @workflow
-def my_wf() -> str:
+def {{cookiecutter.workflow}}() -> str:
     res = say_hello()
     return res
 
@@ -56,5 +56,4 @@ def my_wf() -> str:
 #   every argument should be passed in the form ``arg=value``. Failure to do so
 #   will result in an error
 if __name__ == "__main__":
-    print(f"Running my_wf() {my_wf()}")
-
+    print(f"Running {{cookiecutter.workflow}}() { {{cookiecutter.workflow}}() }")

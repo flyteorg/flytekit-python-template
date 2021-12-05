@@ -6,7 +6,7 @@ set -e
 REGISTRY=""
 
 # SET the appname here
-APP_NAME="myapp"
+APP_NAME="{{ cookiecutter.app }}"
 
 while getopts a:r:v:h flag
 do
