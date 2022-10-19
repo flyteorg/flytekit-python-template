@@ -17,21 +17,18 @@ def process_data(data: pd.DataFrame) -> pd.DataFrame:
 
 
 @task
-def train_model(hyperparams: dict, data: pd.DataFrame) -> FlytePickle:
+def train_model(data: pd.DataFrame) -> FlytePickle:
     features = data.drop("target", axis="columns")
     target = data["target"]
-    return LogisticRegression(**hyperparams).fit(features, target)
+    return LogisticRegression().fit(features, target)
 
 
 @workflow
-def training_workflow(hyperparams: dict) -> FlytePickle:
+def training_workflow() -> FlytePickle:
     data = get_data()
     processed_data = process_data(data=data)
-    return train_model(hyperparams=hyperparams, data=processed_data)
+    return train_model(data=processed_data)
 
 
 if __name__ == "__main__":
-    print(
-        "Running training_workflow() "
-        f"{training_workflow(hyperparams={'max_iter': 5000})}"
-    )
+    print(f"Running training_workflow() {training_workflow()}")
