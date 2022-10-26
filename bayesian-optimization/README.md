@@ -1,6 +1,9 @@
 # {{ cookiecutter.project_name }}
 
-A template for the recommended layout of a Flyte enabled repository for code written in python using [flytekit](https://docs.flyte.org/projects/flytekit/en/latest/)
+A template for with the recommended layout of a Flyte enabled repository for code written
+in python using [flytekit](https://docs.flyte.org/projects/flytekit/en/latest/).
+The `workflows` directory contains an example of how to do bayesian optimization with
+Flyte using the `bayesian-optimization` library.
 
 ## Usage
 

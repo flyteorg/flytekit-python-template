@@ -22,8 +22,8 @@ def suggest_points(
     points = set()
     # make sure that points are unique
     while len(points) < concurrency:
-        points.add({k: float(v) for k, v in optimizer.suggest(utility).items()})
-    return points
+        points.add(tuple([(k, float(v)) for k, v in optimizer.suggest(utility).items()]))
+    return [dict(x) for x in points]
 
 @task
 def register_targets(
