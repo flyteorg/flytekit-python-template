@@ -1,5 +1,3 @@
 {
-    "project_name": "flyte_example",
-    "app": "myapp",
-    "workflow": "my_wf"
+    "project_name": "flyte_example"
 }
