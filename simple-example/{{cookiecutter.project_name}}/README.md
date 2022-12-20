@@ -14,8 +14,11 @@ Docker image for your Flyte project.
 # help
 ./docker_build.sh -h
 
-# build an image
-./docker_build.sh -a {{ cookiecutter.project_name }} -r <REGISTRY> -v <VERSION>
+# build an image with defaults
+./docker_build.sh
+
+# build an image with custom values
+./docker_build.sh -p {{ cookiecutter.project_name }} -r <REGISTRY> -v <VERSION>
 ```
 
 We recommend using a git repository to version this project, so that you can
