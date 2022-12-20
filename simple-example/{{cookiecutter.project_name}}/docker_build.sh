@@ -6,21 +6,21 @@ set -e
 REGISTRY=""
 
 # SET the appname here
-APP_NAME="{{ cookiecutter.project_name }}"
+PROJECT_NAME="{{ cookiecutter.project_name }}"
 
 while getopts a:r:v:h flag
 do
     case "${flag}" in
-        a) APP_NAME=${OPTARG};;
+        p) PROJECT_NAME=${OPTARG};;
         r) REGISTRY=${OPTARG};;
         v) VERSION=${OPTARG};;
-        h) echo "Usage: ${0} [-h|[-a <app_name>][-r <registry_name>][-v <version>]]"
+        h) echo "Usage: ${0} [-h|[-p <project_name>][-r <registry_name>][-v <version>]]"
            echo "  h: help (this message)"
-           echo "  a: APP_NAME or the REPOSITORY APP_NAME. Defaults to '{{ cookiecutter.project_name }}'."
+           echo "  p: PROJECT_NAME for your workflows. Defaults to '{{ cookiecutter.project_name }}'."
            echo "  r: REGISTRY name where the docker container should be pushed. Defaults to none - localhost"
            echo "  v: VERSION of the build. Defaults to using the current git head SHA"
            exit 1;;
-        *) echo "Usage: ${0} [-h|[-a <app_name>][-r <registry_name>][-v <version>]]"
+        *) echo "Usage: ${0} [-h|[-a <project_name>][-r <registry_name>][-v <version>]]"
            exit 1;;
     esac
 done
@@ -32,7 +32,7 @@ if [ -z "${VERSION}" ]; then
   VERSION=$(git rev-parse HEAD)
 fi
 
-TAG=${APP_NAME}:${VERSION}
+TAG=${PROJECT_NAME}:${VERSION}
 if [ -z "${REGISTRY}" ]; then
   echo "No registry set, creating tag ${TAG}"
 else
