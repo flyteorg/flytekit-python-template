@@ -3,8 +3,6 @@
 import typing
 from flytekit import task, workflow
 
-from helpers import count_str_length
-
 
 @task
 def say_hello(name: str) -> str:
@@ -19,7 +17,7 @@ def say_hello(name: str) -> str:
 @task
 def greeting_length(greeting: str) -> int:
     """A task the counts the length of a greeting."""
-    return count_str_length(greeting)
+    return len(greeting)
 
 
 @workflow
