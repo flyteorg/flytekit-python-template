@@ -1,2 +1,2 @@
-flytekit>=1.2.3
+flytekit>=1.2.7
 bayesian-optimization==1.2.0
