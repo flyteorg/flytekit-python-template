@@ -24,7 +24,7 @@ jobs:
 
     - name: Iterate through top level directories and build Docker images
       run: |
-        for dir in */; do
+        for dir in *; do
           echo "Checking $dir"
           if [ -f "$dir/Dockerfile" ]; then
             echo "Building and pushing Docker image for $dir"
