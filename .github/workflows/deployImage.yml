@@ -27,8 +27,8 @@ jobs:
         for dir in *; do
           if [ -f "$dir/{{cookiecutter.project_name}}/Dockerfile" ]; then
             echo "Building and pushing Docker image for $dir"
-            docker build -f $dir/{{cookiecutter.project_name}}/Dockerfile -t ghcr.io/flytekit/flytekit-python-template:${dir}_latest $dir/{{cookiecutter.project_name}}
-            docker push ghcr.io/flytekit/flytekit-python-template:${dir}_latest
+            docker build -f $dir/{{cookiecutter.project_name}}/Dockerfile -t $ghcr.io/{github.repository_owner}/flytekit-python-template:${dir}_latest $dir/{{cookiecutter.project_name}}
+            docker push ghcr.io/{github.repository_owner}/flytekit-python-template:${dir}_latest
           else
             echo "Skipping $dir as it does not contain a Dockerfile"
           fi
