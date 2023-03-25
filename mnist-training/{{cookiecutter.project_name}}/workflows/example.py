@@ -8,6 +8,7 @@ from torch import nn
 This example is a simple MNIST training example. It uses the PyTorch framework to train a simple CNN model on the MNIST dataset.
 The model is trained for 10 epochs and the validation loss is calculated on the test set.
 """
+
 @task
 def get_dataset(training: bool, gpu: bool = False) -> DataLoader:
     """
