@@ -1,0 +1,37 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+#    branches:
+#      - master
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Iterate through top level directories and build Docker images
+      run: |
+        for dir in */; do
+          if [ -f "$dir/Dockerfile" ]; then
+            echo "Building and pushing Docker image for $dir"
+            docker buildx build --platform linux/amd64,linux/arm64 \
+              --output=type=image,push=true \
+              --tag ghcr.io/flytekit/flytekit-python-template:${dir%/}_latest \
+              $dir
+          else
+            echo "Skipping $dir as it does not contain a Dockerfile"
+          fi
+        done
