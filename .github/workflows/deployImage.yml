@@ -25,8 +25,7 @@ jobs:
     - name: Iterate through top level directories and build Docker images
       run: |
         for dir in *; do
-          echo "Checking $dir"
-          if [ -f "$dir/Dockerfile" ]; then
+          if [ -f "$dir/{{cookiecutter.project_name}}/Dockerfile" ]; then
             echo "Building and pushing Docker image for $dir"
             docker buildx build --platform linux/amd64,linux/arm64 \
               --output=type=image,push=true \
