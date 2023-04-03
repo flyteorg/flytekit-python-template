@@ -30,16 +30,17 @@ or using a hosted kubernetes cluster.
 
 ### Default Image
 To make things easy, we created a default public OCI image that you can use to run this tutorial, it can be found here:
-```ghcr.io/flyteorg/flytekit-python-templates:mnist-latest```
+```ghcr.io/flyteorg/flytekit-python-templates:mnist-training-latest```
 
 ### Pyflyte Run
 ```bash
-pyflyte run --remote --image ghcr.io/flyteorg/flytekit-python-templates:mnist-latest --n_epoch 100 --gpu_enabled
-```
+pyflyte run --remote --image ghcr.io/flyteorg/flytekit-python-templates:mnist-training-latest --n_epoch 100 --gpu_enabled
+
 
 
 ### Pyflyte Register
 Or you can register the workflow and launch it from the Flyte console.
 ```bash
 pyflyte register workflows -p flytesnacks -d development --image ghcr.io/flyteorg/flytekit-python-templates:mnist-latest
-```
+
+
