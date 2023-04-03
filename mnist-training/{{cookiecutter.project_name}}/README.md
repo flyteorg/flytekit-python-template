@@ -35,11 +35,12 @@ To make things easy, we created a default public OCI image that you can use to r
 ### Pyflyte Run
 ```bash
 pyflyte run --remote --image ghcr.io/flyteorg/flytekit-python-templates:mnist-training-latest --n_epoch 100 --gpu_enabled
-```
+
 
 
 ### Pyflyte Register
 Or you can register the workflow and launch it from the Flyte console.
 ```bash
 pyflyte register workflows -p flytesnacks -d development --image ghcr.io/flyteorg/flytekit-python-templates:mnist-latest
-```
+
+
