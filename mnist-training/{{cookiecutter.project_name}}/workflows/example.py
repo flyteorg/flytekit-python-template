@@ -104,7 +104,7 @@ def validation_loss(model: th.nn.Sequential, dataset: DataLoader) -> str:
 
 
 @dynamic
-def mnist_workflow(n_epoch: int = 10, gpu_enabled: bool =False) -> str:
+def wf(n_epoch: int = 10, gpu_enabled: bool =False) -> str:
     """Declare workflow called `wf`.
     The @dynamic decorator defines a dynamic workflow.
     Dynamic workflows allow for executing arbitrary python code, and are useful for cases where the
@@ -126,4 +126,4 @@ def mnist_workflow(n_epoch: int = 10, gpu_enabled: bool =False) -> str:
 if __name__ == "__main__":
     # Execute the workflow, simply by invoking it like a function and passing in
     # the necessary parameters
-    print(f"Running wf() { mnist_workflow(n_epoch=10, gpu_enabled=False) }")
+    print(f"Running wf() { wf(n_epoch=10, gpu_enabled=False) }")

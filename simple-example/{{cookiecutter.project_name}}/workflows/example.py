@@ -21,7 +21,7 @@ def greeting_length(greeting: str) -> int:
 
 
 @workflow
-def wf(name: str) -> typing.Tuple[str, int]:
+def wf(name: str='passengers') -> typing.Tuple[str, int]:
     """Declare workflow called `wf`.
 
     The @workflow decorator defines an execution graph that is composed of tasks

@@ -1,0 +1,44 @@
+name: Build Docker Images, and run pyflyte run on templates. If no errors, continue
+
+on:
+  pull_request:
+    branches:
+      - main
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    - name: Install python and pip
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    - name: Iterate through top level directories and build Docker images
+      run: |
+        for dir in *; do
+          if [ -f "$dir/{{cookiecutter.project_name}}/Dockerfile" ]; then
+            echo "Building and pushing Docker image for $dir"
+            docker build -f $dir/{{cookiecutter.project_name}}/Dockerfile -t ghcr.io/${{ github.repository }}:${dir}-latest $dir/{{cookiecutter.project_name}}
+          else
+            echo "Skipping $dir as it does not contain a Dockerfile"
+          fi
+        done
+    - name: Setup flytectl and build k3s cluster
+      run: |
+        curl -sL https://ctl.flyte.org/install | bash
+        flytectl demo start
+    - name: Run pyflyte run on all templates, with built docker images
+      run: |
+        for dir in *; do
+          if [ -f "$dir/{{cookiecutter.project_name}}/Dockerfile" ]; then
+            echo "Running pyflyte run on $dir"
+            pyflyte run  --remote --image ghcr.io/${{ github.repository }}:${dir}-latest run $dir/{{cookiecutter.project_name}}/workflows/example.py wf
+          else
+            echo "Skipping $dir as it does not contain a Dockerfile"
+          fi
+        done
