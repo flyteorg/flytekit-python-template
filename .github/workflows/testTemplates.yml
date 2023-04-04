@@ -31,7 +31,7 @@ jobs:
     - name: Setup flytectl and build k3s cluster
       run: |
         curl -sL https://ctl.flyte.org/install | bash
-        flytectl demo start
+        /bin/flytectl demo start
     - name: Run pyflyte run on all templates, with built docker images
       run: |
         for dir in *; do
