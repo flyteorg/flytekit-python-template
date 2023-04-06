@@ -1,5 +1,4 @@
 import pandas as pd
-import flytekit.extras.sklearn
 
 from sklearn.datasets import load_wine
 from sklearn.linear_model import LogisticRegression
@@ -23,7 +22,7 @@ def train_model(data: pd.DataFrame, hyperparameters: dict) -> LogisticRegression
     return LogisticRegression(max_iter=3000, **hyperparameters).fit(features, target)
 
 @workflow
-def training_workflow(hyperparameters: dict) -> LogisticRegression:
+def training_workflow(hyperparameters: dict = {"C": 0.1}) -> LogisticRegression:
     """Put all of the steps together into a single workflow."""
     data = get_data()
     processed_data = process_data(data=data)
