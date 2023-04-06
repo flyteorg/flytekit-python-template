@@ -30,3 +30,6 @@ def training_workflow(hyperparameters: dict = {"C": 0.1}) -> LogisticRegression:
         data=processed_data,
         hyperparameters=hyperparameters,
     )
+
+if __name__ == "__main__":
+    training_workflow(hyperparameters={"C": 0.1})
