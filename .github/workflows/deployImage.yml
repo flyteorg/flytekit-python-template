@@ -1,4 +1,4 @@
-name: Build and Push Docker Images
+name: Build and Push Docker Images to GitHub Container Registry when pushed to main
 
 on:
   push:
@@ -6,14 +6,14 @@ on:
       - main
 
 jobs:
-  build_and_push:
+  build_and_publish:
     runs-on: ubuntu-latest
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+#    - name: Set up Docker Buildx
+#      uses: docker/setup-buildx-action@v1
 
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v1
@@ -28,7 +28,9 @@ jobs:
           if [ -f "$dir/{{cookiecutter.project_name}}/Dockerfile" ]; then
             echo "Building and pushing Docker image for $dir"
             docker build -f $dir/{{cookiecutter.project_name}}/Dockerfile -t ghcr.io/${{ github.repository }}:${dir}-latest $dir/{{cookiecutter.project_name}}
+            docker tag ghcr.io/${{ github.repository }}:${dir} ghcr.io/${{ github.repository }}:${dir}-${{github.sha }}
             docker push ghcr.io/${{ github.repository }}:${dir}-latest
+            docker push ghcr.io/${{ github.repository }}:${dir}-${{github.sha}}
           else
             echo "Skipping $dir as it does not contain a Dockerfile"
           fi
