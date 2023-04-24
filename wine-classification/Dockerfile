@@ -1,6 +1,4 @@
-# Ensure that your From Image is compatible with the version of pytorch you intend to use,
-# and that the cuda version is compatible with the nvidia drivers located on the node.
-FROM pytorch/pytorch:2.0.0-cuda11.7-cudnn8-runtime
+FROM python:3.10-slim-buster
 
 WORKDIR /root
 ENV VENV /opt/venv
@@ -31,6 +29,6 @@ RUN pip install -r /root/requirements.txt
 COPY . /root
 
 # This tag is supplied by the build script and will be used to determine the version
-# when registering tasks, workflows, and launch plans
+# when registering tasks, workflows_bayesian, and launch plans
 ARG tag
 ENV FLYTE_INTERNAL_IMAGE $tag

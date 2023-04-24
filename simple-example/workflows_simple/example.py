@@ -21,14 +21,14 @@ def greeting_length(greeting: str) -> int:
 
 
 @workflow
-def wf(name: str) -> typing.Tuple[str, int]:
+def wf(name: str = "union") -> typing.Tuple[str, int]:
     """Declare workflow called `wf`.
 
     The @workflow decorator defines an execution graph that is composed of tasks
-    and potentially sub-workflows. In this simple example, the workflow is
+    and potentially sub-workflows_bayesian. In this simple example, the workflow is
     composed of just one task.
 
-    There are a few important things to note about workflows:
+    There are a few important things to note about workflows_bayesian:
     - Workflows are a domain-specific language (DSL) for creating execution
       graphs and therefore only support a subset of Python's behavior.
     - Tasks must be invoked with keyword arguments
