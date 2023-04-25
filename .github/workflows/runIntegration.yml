@@ -50,7 +50,7 @@ jobs:
       with:
         # NOTE: at now only orgs is supported
         owner: ${{ github.repository_owner }}
-        name: ${{g ithub.repository_name }}
+        name: ${{ github.repository_name }}
         # NOTE: using Personal Access Token
         token: ${{ secrets.FLYTE_BOT_PAT }}
-        tag: pr-${{github.event.pull_request.number}}
+        tag: pr-${{ github.event.pull_request.number }}
