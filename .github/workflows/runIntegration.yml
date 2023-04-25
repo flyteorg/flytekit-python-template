@@ -1,0 +1,56 @@
+name: Temporarily build Docker images for integration tests, then run the integration test suite - if all pass; return true. Runs on branches that merge into main
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build_images:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ secrets.FLYTE_BOT_USERNAME }}
+        password: ${{ secrets.FLYTE_BOT_PAT }}
+
+    - name: Iterate through top level directories and build Docker images
+      run: |
+        for dir in *; do
+          if [ -f "$dir/{{cookiecutter.project_name}}/Dockerfile" ]; then
+            echo "Building and pushing Docker image for $dir"
+            docker build -f $dir/{{cookiecutter.project_name}}/Dockerfile -t ghcr.io/${{ github.repository }}:${dir}-pr-${{github.event.pull_request.number}} $dir/{{cookiecutter.project_name}}
+            docker push ghcr.io/${{ github.repository }}:${dir}-pr-${{github.event.pull_request.number}}
+          else
+            echo "Skipping $dir as it does not contain a Dockerfile"
+          fi
+        done
+  integration_tests:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run integration tests
+      env:
+        host: ${{ secrets.FLYTE_HOST }}
+        client_id: ${{ secrets.FLYTE_CLIENT_ID }}
+        client_secret: ${{ secrets.FLYTE_CLIENT_SECRET }}
+      run: |
+        source venv/bin/activate
+        pip install -r requirements.txt
+        python integration.py --host $host --client_id $client_id --client_secret $client_secret
+  teardown_images:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Delete image from ghcr.io
+      uses: bots-house/ghcr-delete-image-action@v1.1.0
+      with:
+        # NOTE: at now only orgs is supported
+        owner: ${{ github.repository_owner }}
+        name: ${{g ithub.repository_name }}
+        # NOTE: using Personal Access Token
+        token: ${{ secrets.FLYTE_BOT_PAT }}
+        tag: pr-${{github.event.pull_request.number}}
