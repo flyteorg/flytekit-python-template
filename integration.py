@@ -1,57 +1,67 @@
 import argparse
-import sys, os
+import sys, os, json
 from flytekit.configuration import SerializationSettings, Config, PlatformConfig, SecretsConfig, AuthType, ImageConfig
 from flytekit.core.base_task import PythonTask
 from flytekit.core.workflow import WorkflowBase
 from flytekit.remote import FlyteRemote
 from uuid import uuid4
+from contextlib import contextmanager
 
 root_directory = os.path.abspath(os.path.dirname(__file__))
-sys.path.append(os.path.join(root_directory, "simple-example"))
-import workflows_simple as wf1
-
-sys.path.append(os.path.join(root_directory, "mnist-training"))
-import workflows_mnist as wf2
-
-sys.path.append(os.path.join(root_directory, "bayesian-optimization"))
-import workflows_bayesian as wf3
-
-sys.path.append(os.path.join(root_directory, "wine-classification"))
-import workflows_wine as wf4
 
 
-def register_all(remote):
-    workflows = []
-    workflows.append({"wf": wf3.wf, "name": "simple-example"})
-    workflows.append({"wf": wf1.mnist_workflow, "name": "mnist-training"})
-    workflows.append({"wf": wf2.wf, "name": "bayesian-optimization"})
-    workflows.append({"wf": wf4.training_workflow, "name": "wine-classification"})
+@contextmanager
+def workflows_module_management(workflow_name):
+    """
+    allows for the import of a workflow module from a path,
+    but imports from the templates root directory; preserving the correct path for imports
+    """
+    module_name = "workflows"
+    path = os.path.join(root_directory, workflow_name, "{{cookiecutter.project_name}}")
+    sys.path.insert(0, path)
+    try:
+        yield __import__(module_name)
+    finally:
+        sys.path.remove(path)
+        for name in dir(sys.modules[module_name]):
+            if name.startswith('__'):
+                continue
+
+            if name in globals():
+                del globals()[name]
+        if module_name in sys.modules:
+            del sys.modules[module_name]
+
+
+def register_all(remote, templates):
 
     version = str(uuid4())
     registered_workflows = []
-    for workflow in workflows:
-        image = f"ghcr.io/flyteorg/flytekit-python-template:{workflow['name']}-latest"
-        print(f"Registering workflow: {workflow['name']} with image: {image}")
-        if isinstance(workflow["wf"], WorkflowBase):
-            reg_workflow = remote.register_workflow(
-                entity=workflow["wf"],
-                serialization_settings=SerializationSettings(image_config=ImageConfig.from_images(image),
-                                                             project="flytetester",
-                                                             domain="development"),
-                version=version,
-            )
-        elif isinstance(workflow["wf"], PythonTask):
-            reg_workflow = remote.register_task(
-                entity=workflow["wf"],
-                serialization_settings=SerializationSettings(image_config=ImageConfig.from_images(image),
-                                                             project="flytetester",
-                                                             domain="development"),
-                version=version,
-            )
-        else:
-            raise Exception("Unknown workflow type")
-        print(f"Registered workflow: {workflow['name']}")
-        registered_workflows.append(reg_workflow)
+    for template_name in templates:
+        with workflows_module_management(template_name) as wf_module:
+            print(wf_module.wf.name)
+            image = f"ghcr.io/flyteorg/flytekit-python-template:{template_name}-latest"
+            print(f"Registering workflow: {template_name} with image: {image}")
+            if isinstance(wf_module.wf, WorkflowBase):
+                reg_workflow = remote.register_workflow(
+                    entity=wf_module.wf,
+                    serialization_settings=SerializationSettings(image_config=ImageConfig.from_images(image),
+                                                                 project="flytetester",
+                                                                 domain="development"),
+                    version=version,
+                )
+            elif isinstance(wf_module.wf, PythonTask):
+                reg_workflow = remote.register_task(
+                    entity=wf_module.wf,
+                    serialization_settings=SerializationSettings(image_config=ImageConfig.from_images(image),
+                                                                 project="flytetester",
+                                                                 domain="development"),
+                    version=version,
+                )
+            else:
+                raise Exception("Unknown workflow type")
+            print(f"Registered workflow: {template_name}")
+            registered_workflows.append(reg_workflow)
     return registered_workflows
 
 
@@ -86,11 +96,13 @@ if __name__ == "__main__":
                 client_credentials_secret=args.client_secret,
                 auth_mode=AuthType.CLIENT_CREDENTIALS,
             ),
-            # secrets = SecretsConfig(default_dir="/etc/secrets"),
         )
     )
 
-    remote_wfs = register_all(remote)
-    print("All workflows_bayesian Registered")
+    with open('templates.json') as f:
+        templates_list = json.load(f)
+
+    remote_wfs = register_all(remote, templates_list)
+    print("All workflows Registered")
     execute_all(remote_wfs, remote)
     exit(0)

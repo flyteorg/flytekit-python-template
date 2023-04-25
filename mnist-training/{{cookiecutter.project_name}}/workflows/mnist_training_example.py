@@ -107,7 +107,7 @@ def validation_loss(model: th.nn.Sequential, dataset: DataLoader) -> str:
 def mnist_workflow(n_epoch: int = 10, gpu_enabled: bool =False) -> str:
     """Declare workflow called `wf`.
     The @dynamic decorator defines a dynamic workflow.
-    Dynamic workflows_bayesian allow for executing arbitrary python code, and are useful for cases where the
+    Dynamic workflows allow for executing arbitrary python code, and are useful for cases where the
     workflow is not known at compile time.
 
     This particular workflow is dynamic to enable the user to choose whether to run the training on the GPU or not.
