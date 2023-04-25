@@ -31,6 +31,7 @@ jobs:
           fi
         done
   integration_tests:
+    needs: build_images
     runs-on: ubuntu-latest
     steps:
     - name: Run integration tests
@@ -43,6 +44,7 @@ jobs:
         pip install -r requirements.txt
         python integration.py --host $host --client_id $client_id --client_secret $client_secret
   teardown_images:
+    needs: integration_tests
     runs-on: ubuntu-latest
     steps:
     - name: Delete image from ghcr.io
