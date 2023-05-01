@@ -1,5 +1,4 @@
 name: Flyte Integration Suite
-description: Run integration tests against a Flyte deployment, builds and pushes Docker images to GitHub Container Registry, and runs integration tests. Executes if PR is made against main branch.
 
 on:
   pull_request:
