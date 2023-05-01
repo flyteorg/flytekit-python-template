@@ -27,7 +27,7 @@ jobs:
             latest_tag=$(git tag -l 'build-success-*' | sort -V | tail -n 1)
             if [ -z "$latest_tag" ]; then
               # If no previous successful build tag exists, check all commits
-              changed_files=$(git diff --name-only {{github.head_ref}} HEAD)
+              changed_files=$(git diff --name-only ${{ github.head_ref }} HEAD)
             else
               # Otherwise, check only the commits since the last successful build
               changed_files=$(git diff --name-only $latest_tag HEAD)
