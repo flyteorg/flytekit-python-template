@@ -27,7 +27,7 @@ jobs:
             base_sha=${{ github.event.pull_request.base.sha }}
             special_tag=build-success-${{github.event.pull_request.number}}
             # Get the list of changed files between the last commit and the current one
-            latest_tag=$(git tag -l 'build-success-${special_tag}' | sort -V | tail -n 1)
+            latest_tag=$(git tag -l '$special_tag' | sort -V | tail -n 1)
             if [ -z "$latest_tag" ]; then
               echo "no previous successful build tag exists"
               # If no previous successful build tag exists, check all commits
