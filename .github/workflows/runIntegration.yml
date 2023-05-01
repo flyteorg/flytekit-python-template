@@ -24,7 +24,14 @@ jobs:
     - name: Iterate through top level directories and build Docker images
       run: |
             # Get the list of changed files between the last commit and the current one
-            changed_files=$(git diff --name-only HEAD~1 HEAD)
+            latest_tag=$(git tag -l 'build-success-*' | sort -V | tail -n 1)
+            if [ -z "$latest_tag" ]; then
+              # If no previous successful build tag exists, check all commits
+              changed_files=$(git diff --name-only HEAD)
+            else
+              # Otherwise, check only the commits since the last successful build
+              changed_files=$(git diff --name-only $latest_tag HEAD)
+            fi
             echo "Changed files: $changed_files"
             for dir in *; do
               if [ -f "$dir/{{cookiecutter.project_name}}/Dockerfile" ]; then
@@ -39,6 +46,11 @@ jobs:
               else
                 echo "Skipping $dir as it does not contain a Dockerfile"
               fi
+              git config user.name "GitHub Actions"
+              git config user.email "actions@github.com"
+              git tag build-success-${{ github.event.pull_request.number }} HEAD
+              git push origin build-success-${{ github.event.pull_request.number }}
+
             done
   integration_tests:
     needs: build_images
