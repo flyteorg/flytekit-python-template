@@ -53,11 +53,11 @@ jobs:
               fi
             done
             if [ -z "$latest_tag" ]; then
+              echo "No previous successful build tag exists, so no need to delete it"
+            else
               echo "Deleting last tag and replacing it with this one, since it was successful"
               git tag -d $latest_tag
-              git push origin :refs/tags/${latest_tag}
-            else
-              echo "No previous successful build tag exists, so no need to delete it"
+              git push origin :refs/tags/$latest_tag
             fi
             git config user.name "GitHub Actions"
             git config user.email "actions@github.com"
