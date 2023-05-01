@@ -1,4 +1,5 @@
-name: Temporarily build Docker images for integration tests, then run the integration test suite - if all pass; return true. Runs on branches that merge into main
+name: Flyte Integration Suite
+description: Run integration tests against a Flyte deployment, builds and pushes Docker images to GitHub Container Registry, and runs integration tests. Executes if PR is made against main branch.
 
 on:
   pull_request:
@@ -21,15 +22,23 @@ jobs:
 
     - name: Iterate through top level directories and build Docker images
       run: |
-        for dir in *; do
-          if [ -f "$dir/{{cookiecutter.project_name}}/Dockerfile" ]; then
-            echo "Building and pushing Docker image for $dir"
-            docker build -f $dir/{{cookiecutter.project_name}}/Dockerfile -t ghcr.io/${{ github.repository }}:${dir}-pr-${{github.event.pull_request.number}} $dir/{{cookiecutter.project_name}}
-            docker push ghcr.io/${{ github.repository }}:${dir}-pr-${{github.event.pull_request.number}}
-          else
-            echo "Skipping $dir as it does not contain a Dockerfile"
-          fi
-        done
+            # Get the list of changed files between the last commit and the current one
+            changed_files=$(git diff --name-only HEAD~1 HEAD)
+            echo "Changed files: $changed_files"
+            for dir in *; do
+              if [ -f "$dir/{{cookiecutter.project_name}}/Dockerfile" ]; then
+                # Check if any of the changed files are in the current directory
+                if echo "$changed_files" | grep -q "^$dir/"; then
+                  echo "Building and pushing Docker image for $dir"
+                  docker build -f $dir/{{cookiecutter.project_name}}/Dockerfile -t ghcr.io/${{ github.repository }}:${dir}-pr-${{github.event.pull_request.number}} $dir/{{cookiecutter.project_name}}
+                  docker push ghcr.io/${{ github.repository }}:${dir}-pr-${{github.event.pull_request.number}}
+                else
+                   echo "Skipping $dir as it does not contain changes"
+                fi
+              else
+                echo "Skipping $dir as it does not contain a Dockerfile"
+              fi
+            done
   integration_tests:
     needs: build_images
     runs-on: ubuntu-latest
