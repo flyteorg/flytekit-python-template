@@ -27,7 +27,7 @@ jobs:
             base_sha=${{ github.event.pull_request.base.sha }}
         
             # Get the list of changed files between the last commit and the current one
-            latest_tag=$(git tag -l 'build-success-*' | sort -V | tail -n 1)
+            latest_tag=$(git tag -l 'build-success-${{github.event.pull_request.number}}' | sort -V | tail -n 1)
             if [ -z "$latest_tag" ]; then
               # If no previous successful build tag exists, check all commits
               changed_files=$(git diff --name-only $base_sha HEAD)
@@ -49,6 +49,12 @@ jobs:
               else
                 echo "Skipping $dir as it does not contain a Dockerfile"
               fi
+              if [ -z $"latest_tag" ]; then
+                echo "Deleting last tag and replacing it with this one, since it was successful"
+                git tag -d $latest_tag
+                git push origin :refs/tags/$latest_tag
+              else
+                echo "No previous successful build tag exists, so no need to delete it"
               git config user.name "GitHub Actions"
               git config user.email "actions@github.com"
               git tag build-success-${{ github.event.pull_request.number }} HEAD
