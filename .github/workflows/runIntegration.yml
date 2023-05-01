@@ -44,6 +44,8 @@ jobs:
     needs: build_images
     runs-on: ubuntu-latest
     steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
     - name: Run integration tests
       env:
         host: ${{ secrets.FLYTE_HOST }}
