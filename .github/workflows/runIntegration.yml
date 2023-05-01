@@ -23,11 +23,14 @@ jobs:
 
     - name: Iterate through top level directories and build Docker images
       run: |
+            # Get the SHA of the base commit of the PR
+            base_sha=${{ github.event.pull_request.base.sha }}
+        
             # Get the list of changed files between the last commit and the current one
             latest_tag=$(git tag -l 'build-success-*' | sort -V | tail -n 1)
             if [ -z "$latest_tag" ]; then
               # If no previous successful build tag exists, check all commits
-              changed_files=$(git diff --name-only ${{ github.head_ref }} HEAD)
+              changed_files=$(git diff --name-only $base_sha HEAD)
             else
               # Otherwise, check only the commits since the last successful build
               changed_files=$(git diff --name-only $latest_tag HEAD)
