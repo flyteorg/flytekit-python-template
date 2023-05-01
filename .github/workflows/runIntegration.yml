@@ -40,7 +40,6 @@ jobs:
         client_id: ${{ secrets.FLYTE_CLIENT_ID }}
         client_secret: ${{ secrets.FLYTE_CLIENT_SECRET }}
       run: |
-        source venv/bin/activate
         pip install -r requirements.txt
         python integration.py --host $host --client_id $client_id --client_secret $client_secret
         exit 0
