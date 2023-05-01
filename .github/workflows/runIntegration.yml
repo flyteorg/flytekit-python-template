@@ -25,14 +25,16 @@ jobs:
       run: |
             # Get the SHA of the base commit of the PR
             base_sha=${{ github.event.pull_request.base.sha }}
-        
+            special_tag = "build-success-${{github.event.pull_request.number}}"
             # Get the list of changed files between the last commit and the current one
-            latest_tag=$(git tag -l 'build-success-${{github.event.pull_request.number}}' | sort -V | tail -n 1)
+            latest_tag=$(git tag -l 'build-success-$special_tag' | sort -V | tail -n 1)
             if [ -z "$latest_tag" ]; then
+              echo "no previous successful build tag exists"
               # If no previous successful build tag exists, check all commits
               changed_files=$(git diff --name-only $base_sha HEAD)
             else
               # Otherwise, check only the commits since the last successful build
+              echo "previous successful build tag exists"
               changed_files=$(git diff --name-only $latest_tag HEAD)
             fi
             echo "Changed files: $changed_files"
