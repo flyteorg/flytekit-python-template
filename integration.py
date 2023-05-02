@@ -107,4 +107,3 @@ if __name__ == "__main__":
     print("All workflows Registered")
     execute_all(remote_wfs, remote)
     print("All executions completed")
-    exit(0)
