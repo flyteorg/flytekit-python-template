@@ -1,5 +1,7 @@
 flytekit
 argparse
-torch[cpu]
-torchvision
-scikit-learn
+torch[cpu]>=2.0,<2.1
+torchvision>=0.15,<0.16
+pandas==1.5.3
+scikit-learn==1.2.2
+bayesian-optimization==1.2.0
