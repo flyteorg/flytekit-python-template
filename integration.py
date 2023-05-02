@@ -104,7 +104,7 @@ if __name__ == "__main__":
     with open('templates.json') as f:
         templates_list = json.load(f)
     print(templates_list)
-    remote_wfs = register_all(remote, templates_list, args.image_suffix)
+    remote_wfs = register_all(remote, templates_list, args.image_hostname, args.image_suffix)
     print("All workflows Registered")
     execute_all(remote_wfs, remote)
     print("All executions completed")
