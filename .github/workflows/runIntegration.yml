@@ -23,6 +23,8 @@ jobs:
         password: ${{ secrets.FLYTE_BOT_PAT }}
 
     - name: Iterate through top level directories and build Docker images
+      env:
+        ACCESS_TOKEN: ${{ secrets.FLYTE_BOT_PAT }}
       run: |
             # Get the SHA of the base commit of the PR
             base_sha=${{ github.event.pull_request.base.sha }}
