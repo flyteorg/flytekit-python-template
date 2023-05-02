@@ -82,18 +82,17 @@ jobs:
       run: |
         pip install -r requirements.txt
         python integration.py --host $host --client_id $client_id --client_secret $client_secret --image_suffix pr-${{ github.event.pull_request.number }}
-        exit 0
-  teardown_images:
-    needs: integration_tests
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-    - name: Delete image from ghcr.io
-      uses: bots-house/ghcr-delete-image-action@v1.1.0
-      with:
-        # NOTE: at now only orgs is supported
-        owner: ${{ github.repository_owner }}
-        name: ${{ github.repository }}
-        # NOTE: using Personal Access Token
-        token: ${{ secrets.FLYTE_BOT_PAT }}
-        tag: pr-${{ github.event.pull_request.number }}
+#  teardown_images:
+#    needs: integration_tests
+#    if: always()
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: Delete image from ghcr.io
+#      uses: bots-house/ghcr-delete-image-action@v1.1.0
+#      with:
+#        # NOTE: at now only orgs is supported
+#        owner: ${{ github.repository_owner }}
+#        name: ${{ github.repository }}
+#        # NOTE: using Personal Access Token
+#        token: ${{ secrets.FLYTE_BOT_PAT }}
+#        tag: pr-${{ github.event.pull_request.number }}

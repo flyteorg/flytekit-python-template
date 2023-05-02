@@ -106,4 +106,5 @@ if __name__ == "__main__":
     remote_wfs = register_all(remote, templates_list, args.image_suffix)
     print("All workflows Registered")
     execute_all(remote_wfs, remote)
+    print("All executions completed")
     exit(0)
