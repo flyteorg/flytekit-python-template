@@ -1,4 +1,6 @@
-FROM python:3.10-slim-buster
+# Ensure that your From Image is compatible with the version of pytorch you intend to use,
+# and that the cuda version is compatible with the nvidia drivers located on the node.
+FROM pytorch/pytorch:2.0.0-cuda11.7-cudnn8-runtime
 
 WORKDIR /root
 ENV VENV /opt/venv
@@ -22,7 +24,7 @@ RUN python3 -m venv ${VENV}
 ENV PATH="${VENV}/bin:$PATH"
 
 # Install Python dependencies
-COPY ./requirements.txt /root
+COPY requirements.txt /root
 RUN pip install -r /root/requirements.txt
 
 # Copy the actual code
