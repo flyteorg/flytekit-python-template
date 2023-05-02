@@ -12,6 +12,7 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
       with:
+        fetch-depth: 0
         tags: true
 
     - name: Log in to GitHub Container Registry
@@ -54,15 +55,18 @@ jobs:
             done
             if [ -z "$latest_tag" ]; then
               echo "No previous successful build tag exists, so no need to delete it"
+              remote_path=https://${{ env.ACCESS_TOKEN }}@github.com/${{ github.event.pull_request.head.repo.full_name }}
             else
               echo "Deleting last tag and replacing it with this one, since it was successful"
+              remote_path=https://${{ env.ACCESS_TOKEN }}@github.com/${{ github.repository }}
               git tag -d $latest_tag
-              git push origin :refs/tags/$latest_tag
+              git push $remote_path :refs/tags/$latest_tag
             fi
             git config user.name "GitHub Actions"
             git config user.email "actions@github.com"
             git tag build-success-${{ github.event.pull_request.number }} HEAD
-            git push origin build-success-${{ github.event.pull_request.number }}
+            git push $remote_path build-success-${{ github.event.pull_request.number }}
+
   integration_tests:
     needs: build_images
     runs-on: ubuntu-latest
