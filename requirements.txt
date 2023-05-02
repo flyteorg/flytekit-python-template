@@ -1,2 +1,4 @@
 flytekit
 argparse
+torch
+scikit-learn
