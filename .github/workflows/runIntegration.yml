@@ -53,12 +53,18 @@ jobs:
                 echo "Skipping $dir as it does not contain a Dockerfile"
               fi
             done
-            if [ -z "$latest_tag" ]; then
-              echo "No previous successful build tag exists, so no need to delete it"
+                    # Check if the workflow is running on a fork
+            if [ "${{ github.event.pull_request.head.repo.fork }}" = "true" ]; then
+              echo "Push the tag to the forked repository using the PAT"
               remote_path=https://${{ env.ACCESS_TOKEN }}@github.com/${{ github.event.pull_request.head.repo.full_name }}
             else
-              echo "Deleting last tag and replacing it with this one, since it was successful"
+              echo "Push the tag to the primary repository using the PAT"
               remote_path=https://${{ env.ACCESS_TOKEN }}@github.com/${{ github.repository }}
+            fi
+            if [ -z "$latest_tag" ]; then
+              echo "No previous successful build tag exists, so no need to delete it"
+            else
+              echo "Deleting last tag and replacing it with this one, since it was successful"
               git tag -d $latest_tag
               git push $remote_path :refs/tags/$latest_tag
             fi
