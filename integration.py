@@ -33,14 +33,14 @@ def workflows_module_management(workflow_name):
             del sys.modules[module_name]
 
 
-def register_all(remote, templates, image_suffix):
+def register_all(remote, templates, image_hostname, image_suffix):
 
     version = str(uuid4())
     registered_workflows = []
     for template_name in templates:
         with workflows_module_management(template_name) as wf_module:
             print(wf_module.wf.name)
-            image = f"ghcr.io/flyteorg/flytekit-python-template:{template_name}-{image_suffix}"
+            image = f"{image_hostname}:{template_name}-{image_suffix}"
             print(f"Registering workflow: {template_name} with image: {image}")
             if isinstance(wf_module.wf, WorkflowBase):
                 reg_workflow = remote.register_workflow(
@@ -86,6 +86,7 @@ if __name__ == "__main__":
     args.add_argument("--insecure", type=bool, default=False)
     args.add_argument("--client_id", type=str, required=True)
     args.add_argument("--client_secret", type=str, required=True)
+    args.add_argument("--image_hostname", type=str, default="ghcr.io/flyteorg/flytekit-python-template")
     args.add_argument("--image_suffix", type=str, default="latest")
     args = args.parse_args()
     remote = FlyteRemote(
