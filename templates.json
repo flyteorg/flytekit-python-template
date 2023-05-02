@@ -1,3 +1,6 @@
 [
-  "simple-example"
+  "simple-example",
+  "mnist-training",
+  "bayesian-optimization",
+  "wine-classification"
 ]
