@@ -1,9 +1,10 @@
 import argparse
 import sys, os, json
-from flytekit.configuration import SerializationSettings, Config, PlatformConfig, SecretsConfig, AuthType, ImageConfig
+from flytekit.configuration import SerializationSettings, Config, PlatformConfig, AuthType, ImageConfig
 from flytekit.core.base_task import PythonTask
 from flytekit.core.workflow import WorkflowBase
 from flytekit.remote import FlyteRemote, FlyteTask, FlyteWorkflow
+from datetime import timedelta
 from uuid import uuid4
 from contextlib import contextmanager
 from typing import Union, List
@@ -71,7 +72,7 @@ def execute_all(remote_context: FlyteRemote, reg_workflows: List[Union[FlyteWork
         print(f"Executing workflow: {reg_workflow.id}")
         execution = remote_context.execute(reg_workflow, inputs={}, project="flytetester", domain="development")
         print(f"Execution url: {remote_context.generate_console_url(execution)}")
-        completed_execution = remote_context.wait(execution)
+        completed_execution = remote_context.wait(execution, timeout=timedelta(minutes=10))
         if completed_execution.error is not None:
             raise Exception(f"Execution failed with error: {completed_execution.error}")
         else:
