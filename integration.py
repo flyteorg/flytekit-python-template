@@ -3,15 +3,16 @@ import sys, os, json
 from flytekit.configuration import SerializationSettings, Config, PlatformConfig, SecretsConfig, AuthType, ImageConfig
 from flytekit.core.base_task import PythonTask
 from flytekit.core.workflow import WorkflowBase
-from flytekit.remote import FlyteRemote
+from flytekit.remote import FlyteRemote, FlyteTask, FlyteWorkflow
 from uuid import uuid4
 from contextlib import contextmanager
+from typing import Union, List
 
 root_directory = os.path.abspath(os.path.dirname(__file__))
 
 
 @contextmanager
-def workflows_module_management(workflow_name):
+def workflows_module_management(workflow_name: str):
     """
     allows for the import of a workflow module from a path,
     but imports from the templates root directory; preserving the correct path for imports
@@ -33,7 +34,7 @@ def workflows_module_management(workflow_name):
             del sys.modules[module_name]
 
 
-def register_all(remote, templates, image_hostname, image_suffix):
+def register_all(context: FlyteRemote, templates: List[str], image_hostname: str, image_suffix: str):
 
     version = str(uuid4())
     registered_workflows = []
@@ -43,7 +44,7 @@ def register_all(remote, templates, image_hostname, image_suffix):
             image = f"{image_hostname}:{template_name}-{image_suffix}"
             print(f"Registering workflow: {template_name} with image: {image}")
             if isinstance(wf_module.wf, WorkflowBase):
-                reg_workflow = remote.register_workflow(
+                reg_workflow = context.register_workflow(
                     entity=wf_module.wf,
                     serialization_settings=SerializationSettings(image_config=ImageConfig.from_images(image),
                                                                  project="flytetester",
@@ -51,7 +52,7 @@ def register_all(remote, templates, image_hostname, image_suffix):
                     version=version,
                 )
             elif isinstance(wf_module.wf, PythonTask):
-                reg_workflow = remote.register_task(
+                reg_workflow = context.register_task(
                     entity=wf_module.wf,
                     serialization_settings=SerializationSettings(image_config=ImageConfig.from_images(image),
                                                                  project="flytetester",
@@ -65,12 +66,12 @@ def register_all(remote, templates, image_hostname, image_suffix):
     return registered_workflows
 
 
-def execute_all(reg_workflows, remote):
+def execute_all(remote_context: FlyteRemote, reg_workflows: List[Union[FlyteWorkflow, FlyteTask]]):
     for reg_workflow in reg_workflows:
         print(f"Executing workflow: {reg_workflow.id}")
-        execution = remote.execute(reg_workflow, inputs={}, project="flytetester", domain="development")
-        print(f"Execution url: {remote.generate_console_url(execution)}")
-        completed_execution = remote.wait(execution)
+        execution = remote_context.execute(reg_workflow, inputs={}, project="flytetester", domain="development")
+        print(f"Execution url: {remote_context.generate_console_url(execution)}")
+        completed_execution = remote_context.wait(execution)
         if completed_execution.error is not None:
             raise Exception(f"Execution failed with error: {completed_execution.error}")
         else:
@@ -106,5 +107,5 @@ if __name__ == "__main__":
     print(templates_list)
     remote_wfs = register_all(remote, templates_list, args.image_hostname, args.image_suffix)
     print("All workflows Registered")
-    execute_all(remote_wfs, remote)
+    execute_all(remote, remote_wfs)
     print("All executions completed")
