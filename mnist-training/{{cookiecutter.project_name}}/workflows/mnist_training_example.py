@@ -17,7 +17,7 @@ def get_dataset(training: bool, gpu: bool = False) -> DataLoader:
     :return: A dataloader for the MNIST dataset.
     """
     dataset = datasets.MNIST("/tmp/mnist", train=training, download=True, transform=transforms.ToTensor())
-    if gpu:
+    if gpu and training is True:
         dataloader = DataLoader(dataset, batch_size=64, shuffle=True, pin_memory_device="cuda", pin_memory=True)
     else:
         dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
