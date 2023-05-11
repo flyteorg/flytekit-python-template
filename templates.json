@@ -1,4 +1,5 @@
 [
   "simple-example",
+  "bayesian-optimization",
   "wine-classification"
 ]
