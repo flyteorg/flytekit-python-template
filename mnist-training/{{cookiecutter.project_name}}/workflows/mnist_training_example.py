@@ -127,7 +127,6 @@ def mnist_workflow_cpu(n_epoch: int = 10) -> str:
     output = validation_loss(model=trained_model, dataset=test_dataset)
     return output
 
-
 @workflow
 def mnist_workflow_gpu(n_epoch: int = 10) -> str:
     training_dataset = get_dataset(training=True, gpu=True)
