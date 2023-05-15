@@ -1,13 +1,15 @@
 import torch
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
-from flytekit import task, dynamic, Resources
+from flytekit import task, workflow, Resources
 import torch as th
 from torch import nn
+
 """
 This example is a simple MNIST training example. It uses the PyTorch framework to train a simple CNN model on the MNIST dataset.
 The model is trained for 10 epochs and the validation loss is calculated on the test set.
 """
+
 
 @task
 def get_dataset(training: bool, gpu: bool = False) -> DataLoader:
@@ -23,21 +25,26 @@ def get_dataset(training: bool, gpu: bool = False) -> DataLoader:
         dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
     return dataloader
 
+
 @task(requests=Resources(cpu="2", mem="10Gi"))
-def train_model_cpu(model: th.nn.Sequential, optim: th.optim.Optimizer,  dataset: DataLoader, n_epochs: int) -> th.nn.Sequential:
+def train_model_cpu(model: th.nn.Sequential, optim: th.optim.Optimizer, dataset: DataLoader,
+                    n_epochs: int) -> th.nn.Sequential:
     """
     This task trains the model for the specified number of epochs.
     This variant of the task uses the CPU for training. as you can see from the Resources requested in the task decorator.
     """
     return train_model(model=model, optim=optim, dataset=dataset, n_epochs=n_epochs)
 
+
 @task(requests=Resources(gpu="1", mem="10Gi"))
-def train_model_gpu(model: th.nn.Sequential, optim: th.optim.Optimizer,  dataset: DataLoader, n_epochs: int) -> th.nn.Sequential:
+def train_model_gpu(model: th.nn.Sequential, optim: th.optim.Optimizer, dataset: DataLoader,
+                    n_epochs: int) -> th.nn.Sequential:
     """
     This task trains the model for the specified number of epochs.
     This variant of the task uses the GPU for training. as you can see from the Resources requested in the task decorator.
     """
     return train_model(model=model, optim=optim, dataset=dataset, n_epochs=n_epochs)
+
 
 """
 General Functions, used by Tasks
@@ -61,7 +68,8 @@ def get_model_architecture() -> (th.nn.Sequential, th.optim.Optimizer):
     return model, optimizer
 
 
-def train_model(model: th.nn.Sequential, optim: th.optim.Optimizer,  dataset: DataLoader, n_epochs: int) -> th.nn.Sequential:
+def train_model(model: th.nn.Sequential, optim: th.optim.Optimizer, dataset: DataLoader,
+                n_epochs: int) -> th.nn.Sequential:
     """
     This function runs the inner training loop for the specified number of epochs.
     If a GPU is available, the model is moved to the GPU and the training is done on the GPU.
@@ -80,6 +88,7 @@ def train_model(model: th.nn.Sequential, optim: th.optim.Optimizer,  dataset: Da
             loss.backward()
             optim.step()
     return model
+
 
 @task(requests=Resources(cpu="2", mem="10Gi"))
 def validation_loss(model: th.nn.Sequential, dataset: DataLoader) -> str:
@@ -102,9 +111,8 @@ def validation_loss(model: th.nn.Sequential, dataset: DataLoader) -> str:
     return "NLL model loss in test set: " + str(loss)
 
 
-
-@dynamic
-def mnist_workflow(n_epoch: int = 10, gpu_enabled: bool =False) -> str:
+@workflow
+def mnist_workflow_cpu(n_epoch: int = 10) -> str:
     """Declare workflow called `wf`.
     The @dynamic decorator defines a dynamic workflow.
     Dynamic workflows allow for executing arbitrary python code, and are useful for cases where the
@@ -112,13 +120,23 @@ def mnist_workflow(n_epoch: int = 10, gpu_enabled: bool =False) -> str:
 
     This particular workflow is dynamic to enable the user to choose whether to run the training on the GPU or not.
     """
-    training_dataset = get_dataset(training=True, gpu=gpu_enabled)
-    test_dataset = get_dataset(training=False, gpu=gpu_enabled)
+    training_dataset = get_dataset(training=True, gpu=False)
+    test_dataset = get_dataset(training=False, gpu=False)
     model, optim = get_model_architecture()
-    if gpu_enabled:
-        trained_model = train_model_gpu(model=model, optim=optim, dataset=training_dataset, n_epochs=n_epoch)
-    else:
-        trained_model = train_model_cpu(model=model, optim=optim, dataset=training_dataset, n_epochs=n_epoch)
+    trained_model = train_model_cpu(model=model, optim=optim, dataset=training_dataset, n_epochs=n_epoch)
+    output = validation_loss(model=trained_model, dataset=test_dataset)
+    return output
+
+
+@workflow
+def mnist_workflow_gpu(n_epoch: int = 10) -> str:
+    """
+    This workflow is identical to the previous one, except that it runs the training on the GPU.
+    """
+    training_dataset = get_dataset(training=True, gpu=True)
+    test_dataset = get_dataset(training=False, gpu=True)
+    model, optim = get_model_architecture()
+    trained_model = train_model_gpu(model=model, optim=optim, dataset=training_dataset, n_epochs=n_epoch)
     output = validation_loss(model=trained_model, dataset=test_dataset)
     return output
 
@@ -126,4 +144,4 @@ def mnist_workflow(n_epoch: int = 10, gpu_enabled: bool =False) -> str:
 if __name__ == "__main__":
     # Execute the workflow, simply by invoking it like a function and passing in
     # the necessary parameters
-    print(f"Running wf() { mnist_workflow(n_epoch=10, gpu_enabled=False) }")
+    print(f"Running wf() {mnist_workflow_cpu(n_epoch=10)}")

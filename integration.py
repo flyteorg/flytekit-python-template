@@ -35,26 +35,29 @@ def workflows_module_management(workflow_name: str):
             del sys.modules[module_name]
 
 
-def register_all(context: FlyteRemote, templates: List[str], image_hostname: str, image_suffix: str):
+def register_all(context: FlyteRemote, templates: List[dict], image_hostname: str, image_suffix: str):
 
     version = str(uuid4())
     registered_workflows = []
-    for template_name in templates:
+    for template in templates:
+        template_name = template["template_name"]
+        workflow_name = template["workflow_name"]
         with workflows_module_management(template_name) as wf_module:
-            print(wf_module.wf.name)
+            workflow = getattr(wf_module, workflow_name)
+            print(workflow.name)
             image = f"{image_hostname}:{template_name}-{image_suffix}"
             print(f"Registering workflow: {template_name} with image: {image}")
-            if isinstance(wf_module.wf, WorkflowBase):
+            if isinstance(workflow, WorkflowBase):
                 reg_workflow = context.register_workflow(
-                    entity=wf_module.wf,
+                    entity=workflow,
                     serialization_settings=SerializationSettings(image_config=ImageConfig.from_images(image),
                                                                  project="flytetester",
                                                                  domain="development"),
                     version=version,
                 )
-            elif isinstance(wf_module.wf, PythonTask):
+            elif isinstance(workflow, PythonTask):
                 reg_workflow = context.register_task(
-                    entity=wf_module.wf,
+                    entity=workflow,
                     serialization_settings=SerializationSettings(image_config=ImageConfig.from_images(image),
                                                                  project="flytetester",
                                                                  domain="development"),
