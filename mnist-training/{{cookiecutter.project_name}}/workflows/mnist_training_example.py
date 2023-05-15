@@ -127,8 +127,12 @@ def mnist_workflow_cpu(n_epoch: int = 10) -> str:
     output = validation_loss(model=trained_model, dataset=test_dataset)
     return output
 
+
 @workflow
 def mnist_workflow_gpu(n_epoch: int = 10) -> str:
+    """
+    This workflow is identical to the previous one, except that it runs the training on the GPU.
+    """
     training_dataset = get_dataset(training=True, gpu=True)
     test_dataset = get_dataset(training=False, gpu=True)
     model, optim = get_model_architecture()
