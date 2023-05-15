@@ -1,0 +1,1 @@
+from .mnist_training_example import mnist_workflow as wf

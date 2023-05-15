@@ -1,0 +1,1 @@
+from .bayesian_optimization_example import wf as wf
