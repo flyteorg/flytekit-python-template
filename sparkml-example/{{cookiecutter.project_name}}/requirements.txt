@@ -1,0 +1,7 @@
+altair
+flytekit>=1.6.0
+flytekitplugins-deck-standard>=1.6.0
+flytekitplugins-papermill>=1.6.0
+flytekitplugins-spark>=1.6.0
+scikit-learn
+xgboost
