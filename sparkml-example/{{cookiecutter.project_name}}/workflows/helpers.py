@@ -7,14 +7,15 @@ from pyspark.ml.tuning import TrainValidationSplitModel
 def extract_validation_metrics(
     tvs_model: TrainValidationSplitModel, paramGrid: List[Dict[Param, Any]]
 ) -> pd.DataFrame:
-    """_summary_
+    """Extracts validation metrics from a pyspark train-validation
+    grid search model.
 
     Args:
-        tvs_model (TrainValidationSplitModel): _description_
-        paramGrid (List[Dict[Param, Any]]): _description_
+        tvs_model (TrainValidationSplitModel): a grid search model
+        paramGrid (List[Dict[Param, Any]]): a parameter grid
 
     Returns:
-        pd.DataFrame: _description_
+        pd.DataFrame: a dataframe of validation metrics and corresponding parameters
     """
     # Extract evaluation metrics and corresponding parameters
     metrics = tvs_model.validationMetrics
