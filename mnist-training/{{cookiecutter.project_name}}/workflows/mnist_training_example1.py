@@ -27,67 +27,23 @@ def get_dataset(training: bool, gpu: bool = False) -> DataLoader:
 
 
 @task(requests=Resources(cpu="2", mem="10Gi"))
-def train_model_cpu(model: th.nn.Sequential, optim: th.optim.Optimizer, dataset: DataLoader,
-                    n_epochs: int) -> th.nn.Sequential:
+def train_cpu(dataset: DataLoader, n_epochs: int) -> th.nn.Sequential:
     """
     This task trains the model for the specified number of epochs.
     This variant of the task uses the CPU for training. as you can see from the Resources requested in the task decorator.
     """
+    model, optim = get_model_architecture()
     return train_model(model=model, optim=optim, dataset=dataset, n_epochs=n_epochs)
 
 
 @task(requests=Resources(gpu="1", mem="10Gi"))
-def train_model_gpu(model: th.nn.Sequential, optim: th.optim.Optimizer, dataset: DataLoader,
-                    n_epochs: int) -> th.nn.Sequential:
+def train_gpu(dataset: DataLoader, n_epochs: int) -> th.nn.Sequential:
     """
     This task trains the model for the specified number of epochs.
     This variant of the task uses the GPU for training. as you can see from the Resources requested in the task decorator.
     """
+    model, optim = get_model_architecture()
     return train_model(model=model, optim=optim, dataset=dataset, n_epochs=n_epochs)
-
-
-"""
-General Functions, used by Tasks
-"""
-
-
-def get_model_architecture() -> (th.nn.Sequential, th.optim.Optimizer):
-    model = nn.Sequential(
-        nn.Conv2d(1, 16, kernel_size=3, padding=1),
-        nn.ReLU(),
-        nn.MaxPool2d(kernel_size=2),
-        nn.Conv2d(16, 32, kernel_size=3, padding=1),
-        nn.ReLU(),
-        nn.MaxPool2d(kernel_size=2),
-        nn.Flatten(),
-        nn.Linear(32 * 7 * 7, 128),
-        nn.ReLU(),
-        nn.Linear(128, 10)
-    )
-    optimizer = th.optim.SGD(model.parameters(), lr=0.003, momentum=0.9)
-    return model, optimizer
-
-
-def train_model(model: th.nn.Sequential, optim: th.optim.Optimizer, dataset: DataLoader,
-                n_epochs: int) -> th.nn.Sequential:
-    """
-    This function runs the inner training loop for the specified number of epochs.
-    If a GPU is available, the model is moved to the GPU and the training is done on the GPU.
-    """
-    if th.cuda.is_available():
-        model.to("cuda").train()
-    else:
-        model.train()
-    for epoch in range(n_epochs):
-        for data, target in dataset:
-            if th.cuda.is_available():
-                data, target = data.to("cuda"), target.to("cuda")
-            optim.zero_grad()
-            output = model.forward(data)
-            loss = th.nn.functional.nll_loss(output, target)
-            loss.backward()
-            optim.step()
-    return model
 
 
 @task(requests=Resources(cpu="2", mem="10Gi"))
@@ -111,6 +67,51 @@ def validation_loss(model: th.nn.Sequential, dataset: DataLoader) -> str:
     return "NLL model loss in test set: " + str(loss)
 
 
+
+"""
+General Functions, used by Tasks
+"""
+
+
+def train_model(model: th.nn.Sequential, optim: th.optim.Optimizer, dataset: DataLoader,
+                n_epochs: int) -> th.nn.Sequential:
+    """
+    This function runs the inner training loop for the specified number of epochs.
+    If a GPU is available, the model is moved to the GPU and the training is done on the GPU.
+    """
+    if th.cuda.is_available():
+        model.to("cuda").train()
+    else:
+        model.train()
+    for epoch in range(n_epochs):
+        for data, target in dataset:
+            if th.cuda.is_available():
+                data, target = data.to("cuda"), target.to("cuda")
+            optim.zero_grad()
+            output = model.forward(data)
+            loss = th.nn.functional.nll_loss(output, target)
+            loss.backward()
+            optim.step()
+    return model
+
+def get_model_architecture() -> (th.nn.Sequential, th.optim.Optimizer):
+    model = nn.Sequential(
+        nn.Conv2d(1, 16, kernel_size=3, padding=1),
+        nn.ReLU(),
+        nn.MaxPool2d(kernel_size=2),
+        nn.Conv2d(16, 32, kernel_size=3, padding=1),
+        nn.ReLU(),
+        nn.MaxPool2d(kernel_size=2),
+        nn.Flatten(),
+        nn.Linear(32 * 7 * 7, 128),
+        nn.ReLU(),
+        nn.Linear(128, 10)
+    )
+    optimizer = th.optim.SGD(model.parameters(), lr=0.003, momentum=0.9)
+    return model, optimizer
+
+
+
 @workflow
 def mnist_workflow_cpu(n_epoch: int = 10) -> str:
     """Declare workflow called `wf`.
@@ -122,8 +123,7 @@ def mnist_workflow_cpu(n_epoch: int = 10) -> str:
     """
     training_dataset = get_dataset(training=True, gpu=False)
     test_dataset = get_dataset(training=False, gpu=False)
-    model, optim = get_model_architecture()
-    trained_model = train_model_cpu(model=model, optim=optim, dataset=training_dataset, n_epochs=n_epoch)
+    trained_model = train_cpu(dataset=training_dataset, n_epochs=n_epoch)
     output = validation_loss(model=trained_model, dataset=test_dataset)
     return output
 
@@ -135,8 +135,7 @@ def mnist_workflow_gpu(n_epoch: int = 10) -> str:
     """
     training_dataset = get_dataset(training=True, gpu=True)
     test_dataset = get_dataset(training=False, gpu=True)
-    model, optim = get_model_architecture()
-    trained_model = train_model_gpu(model=model, optim=optim, dataset=training_dataset, n_epochs=n_epoch)
+    trained_model = train_gpu(dataset=training_dataset, n_epochs=n_epoch)
     output = validation_loss(model=trained_model, dataset=test_dataset)
     return output
 

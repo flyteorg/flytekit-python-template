@@ -1,6 +1,6 @@
 [
-  {"template_name": "simple-example", "workflow_name": "wf"},
-  {"template_name":  "wine-classification", "workflow_name":  "training_workflow"},
   {"template_name":  "mnist-training", "workflow_name":  "mnist_workflow_cpu"},
-  {"template_name":  "mnist-training", "workflow_name": "mnist_workflow_gpu"}
+  {"template_name":  "mnist-training", "workflow_name": "mnist_workflow_gpu"},
+  {"template_name": "simple-example", "workflow_name": "wf"},
+  {"template_name":  "wine-classification", "workflow_name":  "training_workflow"}
 ]
