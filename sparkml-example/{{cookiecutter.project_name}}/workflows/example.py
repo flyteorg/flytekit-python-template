@@ -128,7 +128,7 @@ def xgboost_gridsearch_spark(
     task_config=Spark(spark_conf=SPARK_CONFIG),
     disable_deck=False,
     cache=True,
-    cache_version="v1",
+    cache_version="v2",
 )
 def score_test_dataset(model: PipelineModel, test_ds: Dataset) -> StructuredDataset:
     """Score the test dataset using a trained spark xgboost model

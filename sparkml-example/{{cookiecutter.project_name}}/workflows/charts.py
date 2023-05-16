@@ -17,7 +17,8 @@ def plot_subgroup_performance(df: pd.DataFrame) -> str:
         str: chart as an html string
     """
     bucketed_data = df.copy()
-    bucketed_data = bucketed_data[~bucketed_data.columns.str.startswith("__")]
+    feature_columns = bucketed_data.columns[~bucketed_data.columns.str.startswith("__")]
+    bucketed_data = bucketed_data[feature_columns]
     assert "target" in bucketed_data.columns, "target column is missing"
     assert "prediction" in bucketed_data.columns, "prediction column is missing"
 
