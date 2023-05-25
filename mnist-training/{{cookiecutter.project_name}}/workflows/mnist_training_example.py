@@ -26,7 +26,7 @@ def get_dataset(training: bool, gpu: bool = False) -> DataLoader:
     return dataloader
 
 
-@task(requests=Resources(cpu="2", mem="10Gi"))
+@task(requests=Resources(cpu="2", mem="10Gi", ephemeral_storage="500M"))
 def train_cpu(dataset: DataLoader, n_epochs: int) -> th.nn.Sequential:
     """
     This task trains the model for the specified number of epochs.
@@ -36,7 +36,7 @@ def train_cpu(dataset: DataLoader, n_epochs: int) -> th.nn.Sequential:
     return train_model(model=model, optim=optim, dataset=dataset, n_epochs=n_epochs)
 
 
-@task(requests=Resources(gpu="1", mem="10Gi"))
+@task(requests=Resources(gpu="1", mem="10Gi", ephemeral_storage="500M"))
 def train_gpu(dataset: DataLoader, n_epochs: int) -> th.nn.Sequential:
     """
     This task trains the model for the specified number of epochs.
@@ -67,7 +67,6 @@ def validation_loss(model: th.nn.Sequential, dataset: DataLoader) -> str:
     return "NLL model loss in test set: " + str(loss)
 
 
-
 """
 General Functions, used by Tasks
 """
@@ -94,6 +93,7 @@ def train_model(model: th.nn.Sequential, optim: th.optim.Optimizer, dataset: Dat
             optim.step()
     return model
 
+
 def get_model_architecture() -> (th.nn.Sequential, th.optim.Optimizer):
     model = nn.Sequential(
         nn.Conv2d(1, 16, kernel_size=3, padding=1),
@@ -109,7 +109,6 @@ def get_model_architecture() -> (th.nn.Sequential, th.optim.Optimizer):
     )
     optimizer = th.optim.SGD(model.parameters(), lr=0.003, momentum=0.9)
     return model, optimizer
-
 
 
 @workflow
