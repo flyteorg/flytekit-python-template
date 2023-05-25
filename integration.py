@@ -86,23 +86,27 @@ if __name__ == "__main__":
     """
     This program takes a remote cluster, registers all templates on it - and then returns a url to the workflow on the Flyte Cluster.
         """
-    args = argparse.ArgumentParser()
-    args.add_argument("--host", type=str, required=True)
-    args.add_argument("--insecure", type=bool, default=False)
-    args.add_argument("--client_id", type=str, required=True)
-    args.add_argument("--client_secret", type=str, required=True)
-    args.add_argument("--image_hostname", type=str, default="ghcr.io/flyteorg/flytekit-python-template")
-    args.add_argument("--image_suffix", type=str, default="latest")
-    args = args.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--host", type=str, required=True)
+    parser.add_argument("--auth_type", type=str, choices=["CLIENT_CREDENTIALS", "PKCE"], default="CLIENT_CREDENTIALS")
+    parser.add_argument("--insecure", type=bool, default=False)
+    parser.add_argument("--image_hostname", type=str, default="ghcr.io/flyteorg/flytekit-python-template")
+    parser.add_argument("--image_suffix", type=str, default="latest")
+    args, _ = parser.parse_known_args()
+    auth_type = getattr(AuthType, args.auth_type)
+    client_credential_parser = argparse.ArgumentParser(parents=[parser], add_help=False)
+    if auth_type == AuthType.CLIENT_CREDENTIALS:
+        client_credential_parser.add_argument("--client_id", type=str, required=True)
+        client_credential_parser.add_argument("--client_secret", type=str, required=True)
+    args = client_credential_parser.parse_args()
+
+    platform_args = {'endpoint': args.host, 'auth_mode': auth_type, 'insecure': args.insecure}
+    if auth_type == AuthType.CLIENT_CREDENTIALS:
+        platform_args['client_id'] = args.client_id
+        platform_args['client_secret'] = args.client_secret
     remote = FlyteRemote(
         config=Config(
-            platform=PlatformConfig(
-                endpoint=args.host,
-                insecure=args.insecure,
-                client_id=args.client_id,
-                client_credentials_secret=args.client_secret,
-                auth_mode=AuthType.CLIENT_CREDENTIALS,
-            ),
+            platform=PlatformConfig(**platform_args),
         )
     )
 
