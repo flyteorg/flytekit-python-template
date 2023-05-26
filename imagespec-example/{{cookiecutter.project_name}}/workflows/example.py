@@ -26,17 +26,18 @@ import pandas as pd
 from flytekit import task, workflow, ImageSpec, Resources
 
 pandas_image_spec = ImageSpec(
+    name="flytekit",
     base_image="ghcr.io/flyteorg/flytekit:py3.8-1.6.0",
-    registry="docker",
+    registry="ghcr.io/unionai-oss",
     packages=["pandas", "numpy"],
     python_version="3.9",
-    apt_packages=["git"],
     env={"Debug": "True"},
 )
 
 sklearn_image_spec = ImageSpec(
+    name="flytekit",
     base_image="ghcr.io/flyteorg/flytekit:py3.8-1.6.0",
-    registry="docker",
+    registry="ghcr.io/unionai-oss",
     packages=["tensorflow"],
 )
 
@@ -58,19 +59,16 @@ def get_pandas_dataframe() -> (pd.DataFrame, pd.Series):
 
 
 @task(container_image=sklearn_image_spec, requests=Resources(cpu="1", mem="1Gi"))
-# @task
 def get_model(max_iter: int, multi_class: str) -> LogisticRegression:
     return LogisticRegression(max_iter=max_iter, multi_class=multi_class)
 
 
 # Get a basic model to train.
 @task(container_image=sklearn_image_spec, requests=Resources(cpu="1", mem="1Gi"))
-# @task
 def train_model(model: LogisticRegression, feature: pd.DataFrame, target: pd.Series) -> LogisticRegression:
     model.fit(feature, target)
     return model
-#
-#
+
 # # Lastly, let's define a workflow to capture the dependencies between the tasks.
 @workflow()
 def imagespec_workflow() -> LogisticRegression:
