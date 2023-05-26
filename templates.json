@@ -1,4 +1,4 @@
-[
+[ {"template_name": "bigquery-query", "workflow_name": "no_io_wf"},
   {"template_name":  "mnist-training", "workflow_name":  "mnist_workflow_cpu"},
   {"template_name":  "mnist-training", "workflow_name": "mnist_workflow_gpu"},
   {"template_name": "simple-example", "workflow_name": "wf"},
