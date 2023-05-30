@@ -19,7 +19,7 @@ so, it avoids having to rebuild the image over and over again. If the image does
 image before registering the workflow, and replace the image name in the task template with the newly built image name.
 """
 image_definition = ImageSpec(
-    image_name="flytekit",  # rename this to your docker image name
+    name="flytekit",  # rename this to your docker image name
     base_image="ghcr.io/flyteorg/flytekit:py3.10-1.6.0",  # this is the base image that flytekit will use to build your image
     registry="ghcr.io/unionai-oss",  # this is the registry where your image will be pushed to
     packages=["flytekit>=1.6.0", "bayesian-optimization==1.4.3"],  # these are the packages that will be installed in your image
