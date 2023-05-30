@@ -1,0 +1,1 @@
+from .example import imagespec_workflow as wf
