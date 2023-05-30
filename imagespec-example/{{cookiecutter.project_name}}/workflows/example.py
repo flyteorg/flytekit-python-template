@@ -70,7 +70,7 @@ def train_model(model: LogisticRegression, feature: pd.DataFrame, target: pd.Ser
     return model
 
 # # Lastly, let's define a workflow to capture the dependencies between the tasks.
-@workflow()
+@workflow
 def imagespec_workflow() -> LogisticRegression:
     feature, target = get_pandas_dataframe()
     model = get_model(max_iter=3000, multi_class="auto")
