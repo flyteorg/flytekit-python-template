@@ -1,1 +1,1 @@
-from .example import wf as wf
+from .example import *
