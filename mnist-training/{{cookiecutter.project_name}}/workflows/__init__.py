@@ -1,1 +1,0 @@
-from .mnist_training_example import *
