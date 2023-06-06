@@ -11,7 +11,7 @@ The model is trained for 10 epochs and the validation loss is calculated on the 
 """
 
 
-@task
+@task(requests=Resources(cpu="1", mem="1Gi", ephemeral_storage="10Gi"))
 def get_dataset(training: bool, gpu: bool = False) -> DataLoader:
     """
     This task downloads the MNIST dataset and returns a dataloader for the dataset.
@@ -26,7 +26,7 @@ def get_dataset(training: bool, gpu: bool = False) -> DataLoader:
     return dataloader
 
 
-@task(requests=Resources(cpu="2", mem="10Gi"))
+@task(requests=Resources(cpu="2", mem="10Gi", ephemeral_storage="10Gi"))
 def train_cpu(dataset: DataLoader, n_epochs: int) -> th.nn.Sequential:
     """
     This task trains the model for the specified number of epochs.
@@ -36,7 +36,7 @@ def train_cpu(dataset: DataLoader, n_epochs: int) -> th.nn.Sequential:
     return train_model(model=model, optim=optim, dataset=dataset, n_epochs=n_epochs)
 
 
-@task(requests=Resources(gpu="1", mem="10Gi"))
+@task(requests=Resources(gpu="1", mem="10Gi", ephemeral_storage="10Gi"))
 def train_gpu(dataset: DataLoader, n_epochs: int) -> th.nn.Sequential:
     """
     This task trains the model for the specified number of epochs.
@@ -46,7 +46,7 @@ def train_gpu(dataset: DataLoader, n_epochs: int) -> th.nn.Sequential:
     return train_model(model=model, optim=optim, dataset=dataset, n_epochs=n_epochs)
 
 
-@task(requests=Resources(cpu="2", mem="10Gi"))
+@task(requests=Resources(cpu="2", mem="10Gi", ephemeral_storage="15Gi"))
 def validation_loss(model: th.nn.Sequential, dataset: DataLoader) -> str:
     """
     This task calculates the validation loss on the test set.

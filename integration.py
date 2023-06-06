@@ -103,7 +103,7 @@ if __name__ == "__main__":
     platform_args = {'endpoint': args.host, 'auth_mode': auth_type, 'insecure': args.insecure}
     if auth_type == AuthType.CLIENT_CREDENTIALS:
         platform_args['client_id'] = args.client_id
-        platform_args['client_secret'] = args.client_secret
+        platform_args['client_credentials_secret'] = args.client_secret
     remote = FlyteRemote(
         config=Config(
             platform=PlatformConfig(**platform_args),
