@@ -1,4 +1,5 @@
-FROM python:3.8-slim-buster
+ARG PYTHON_VERSION
+FROM python:${PYTHON_VERSION}-slim-buster
 
 WORKDIR /root
 ENV VENV /opt/venv
