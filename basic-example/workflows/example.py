@@ -20,11 +20,11 @@ image before registering the workflow, and replace the image name in the task te
 """
 image_definition = ImageSpec(
     name="flytekit",  # rename this to your docker image name
-    base_image="ghcr.io/flyteorg/flytekit:py3.10-1.6.0",
+    base_image="ghcr.io/flyteorg/flytekit:py3.11-latest",
     # this is the base image that flytekit will use to build your image
     registry="ghcr.io/unionai-oss",  # this is the registry where your image will be pushed to
     packages=["flytekit>=1.6.0"],  # these are the packages that will be installed in your image
-    python_version="3.10",  # this is the python version that will be used to build your image
+    python_version="3.11",  # this is the python version that will be used to build your image
 )
 
 
