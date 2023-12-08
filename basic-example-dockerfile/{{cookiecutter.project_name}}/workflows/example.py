@@ -1,4 +1,4 @@
-"""A simple Flyte example."""
+"""A basic Flyte example."""
 
 import typing
 from flytekit import task, workflow
@@ -6,7 +6,7 @@ from flytekit import task, workflow
 
 @task
 def say_hello(name: str) -> str:
-    """A simple Flyte task to say "hello".
+    """A Flyte task to say "hello".
 
     The @task decorator allows Flyte to use this function as a Flyte task, which
     is executed as an isolated, containerized unit of compute.
