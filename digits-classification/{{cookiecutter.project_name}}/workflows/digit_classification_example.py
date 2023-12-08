@@ -15,25 +15,20 @@ def process_data(data: pd.DataFrame) -> pd.DataFrame:
     pass
 
 @task
-def train_model(data: pd.DataFrame, hyperparameters: dict) -> LogisticRegression:
+def train_model(data: pd.DataFrame) -> LogisticRegression:
     """Train a model on the digits dataset."""
     # TODO update for digits dataset
-    # features = data.drop("target", axis="columns")
-    # target = data["target"]
-    # return LogisticRegression(max_iter=3000, **hyperparameters).fit(features, target)
+    return LogisticRegression()
 
 @workflow
-def training_workflow(hyperparameters: dict = {}) -> LogisticRegression:
+def training_workflow() -> LogisticRegression:
     """Put all of the tasks together into a single workflow."""
     data = get_data()
     processed_data = process_data(data=data)
     # TODO update for digits dataset
-    # return train_model(
-    #     data=processed_data,
-    #     hyperparameters=hyperparameters,
-    # )
+    return train_model()
 
 if __name__ == "__main__":
     # TODO pdate for digits dataset
-    training_workflow(hyperparameters = {})
+    training_workflow()
 
