@@ -3,44 +3,26 @@
 import typing
 from flytekit import task, workflow
 
-"""
-ImageSpec is a way to specify a container image configuration without a
-Dockerfile. The image spec by default will be converted to an
-`Envd <https://envd.tensorchord.ai/>`__ config, and the `Envd builder
-<https://github.com/flyteorg/flytekit/blob/master/plugins/flytekit-envd/flytekitplugins/envd
-/image_builder.py#L12-L34>`__ will build the image for you. However, you can
-also register your own builder to build the image using other tools.
+# ImageSpec is a way to specify a container image configuration without a
+# Dockerfile. To use ImageSpec:
+# 1. Add ImageSpec to the flytekit import line.
+# 2. Uncomment the ImageSpec definition below and modify as needed.
+# 3. If needed, create additional image definitions.
+# 4. Set the container_image parameter on tasks that need a specific image.
+# For more information, see the
+# `ImageSpec documentation <https://docs.flyte.org/projects/cookbook/en/latest/auto_examples/customizing_dependencies/image_spec.html#image-spec-example>`__.
 
-For every task decorated with the ``@task`` decorator,
-or :py:class:`flytekit.PythonFunctionTask` task, you can specify rules for
-binding container images. By default, flytekit binds the
-`default Docker image <https://ghcr.io/flyteorg/flytekit>`__ to all tasks.
-To modify this behavior, use the ``container_image`` parameter available
-in the :py:func:`flytekit.task` decorator, and pass an ``ImageSpec``.
-
-Before building the image, Flytekit first checks the container registry to see
-if the image already exists. By doing so, it avoids having to rebuild the
-image. If the image does not exist, flytekit will build the image before
-registering the workflow, and replace the image name in the task template with
-the newly built image name.
-"""
-
-# Uncomment the ImageSpec definition below and modify with your
-# image definition requirements,
-# then set the container_image parameter on tasks that require the image.
-# You will also need to import ImageSpec from flytekit.
-"""
-image_definition = ImageSpec(
-    name="flytekit",  # rename this to your docker image name
-    base_image="ghcr.io/flyteorg/flytekit:py3.11-1.10.2",
-    # the base image that flytekit will use to build your image
-    packages=[] # packages to add to the base image
-    registry="ghcr.io/unionai-oss",
-    # the registry your image will be pushed to
-    python_version="3.11"
-    # the python version, if different from the base image
-)
-"""
+# image_definition = ImageSpec(
+#    name="flytekit",  # rename this to your docker image name
+#    base_image="ghcr.io/flyteorg/flytekit:py3.11-1.10.2",
+#    # the base image that flytekit will use to build your image
+#    packages=["example-package"],  # packages to add to the base image
+#    # remove "example-package" before using.
+#    registry="ghcr.io/unionai-oss",
+#    # the registry your image will be pushed to
+#    python_version="3.11"
+#    # the python version; optional if not different from the base image
+# )
 
 
 @task()
