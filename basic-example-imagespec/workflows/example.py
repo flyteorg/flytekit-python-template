@@ -3,16 +3,20 @@
 import typing
 from flytekit import task, workflow
 
-# ImageSpec is a way to specify a container image configuration without a
-# Dockerfile. To use ImageSpec:
-# 1. Add ImageSpec to the flytekit import line.
-# 2. Uncomment the ImageSpec definition below and modify as needed.
-# 3. If needed, create additional image definitions.
-# 4. Set the container_image parameter on tasks that need a specific image.
-# For more information, see the
-# `ImageSpec documentation <https://docs.flyte.org/projects/cookbook/en/latest/auto_examples/customizing_dependencies/image_spec.html#image-spec-example>`__.
 
-# image_definition = ImageSpec(
+"""
+ImageSpec is a way to specify a container image configuration without a
+Dockerfile. To use ImageSpec:
+1. Add ImageSpec to the flytekit import line.
+2. Uncomment the ImageSpec definition below and modify as needed.
+3. If needed, create additional image definitions.
+4. Set the container_image parameter on tasks that need a specific image, e.g.
+`@task(container_image=basic_image)`
+For more information, see the
+`ImageSpec documentation <https://docs.flyte.org/projects/cookbook/en/latest/auto_examples/customizing_dependencies/image_spec.html#image-spec-example>`__.
+"""
+
+# basic_image = ImageSpec(
 #    name="flytekit",  # rename this to your docker image name
 #    base_image="ghcr.io/flyteorg/flytekit:py3.11-1.10.2",
 #    # the base image that flytekit will use to build your image
