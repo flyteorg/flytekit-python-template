@@ -1,7 +1,7 @@
 """A simple Flyte example."""
 
 import typing
-from flytekit import task, workflow, ImageSpec
+from flytekit import task, workflow
 
 """
 ImageSpec is a way to specify a container image configuration without a
@@ -26,8 +26,9 @@ the newly built image name.
 """
 
 # Uncomment the ImageSpec definition below and modify with your
-# image definition requirements
-# then set the container_image parameter on tasks that require the image
+# image definition requirements,
+# then set the container_image parameter on tasks that require the image.
+# You will also need to import ImageSpec from flytekit.
 """
 image_definition = ImageSpec(
     name="flytekit",  # rename this to your docker image name
