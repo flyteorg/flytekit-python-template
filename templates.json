@@ -3,5 +3,6 @@
   {"template_name":  "mnist-training", "workflow_name": "mnist_workflow_gpu"},
   {"template_name": "basic-template-dockerfile", "workflow_name": "wf"},
   {"template_name":  "wine-classification", "workflow_name":  "training_workflow"},
-  {"template_name":  "basic-template-imagespec", "workflow_name":  "wf"}
+  {"template_name":  "basic-template-imagespec", "workflow_name":  "wf"},
+  {"template_name":  "hello_world", "workflow_name": "hello_world_wf"}
 ]
