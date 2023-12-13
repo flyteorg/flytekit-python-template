@@ -11,7 +11,10 @@ Dockerfile. To use ImageSpec:
 2. Uncomment the ImageSpec definition below and modify as needed.
 3. If needed, create additional image definitions.
 4. Set the container_image parameter on tasks that need a specific image, e.g.
-`@task(container_image=basic_image)`
+`@task(container_image=basic_image)`. If no container_image is specified,
+flytekit will use the default Docker image at
+https://github.com/flyteorg/flytekit/pkgs/container/flytekit.
+
 For more information, see the
 `ImageSpec documentation <https://docs.flyte.org/projects/cookbook/en/latest/auto_examples/customizing_dependencies/image_spec.html#image-spec-example>`__.
 """
