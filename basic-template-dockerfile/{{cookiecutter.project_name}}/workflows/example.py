@@ -1,31 +1,32 @@
-"""A basic Flyte example."""
+"""A basic Flyte project template that uses a Dockerfile"""
 
 import typing
 from flytekit import task, workflow
 
 
-@task
+@task()
 def say_hello(name: str) -> str:
-    """A Flyte task to say "hello".
+    """A simple Flyte task to say "Hello".
 
-    The @task decorator allows Flyte to use this function as a Flyte task, which
-    is executed as an isolated, containerized unit of compute.
+    The @task decorator allows Flyte to use this function as a Flyte task,
+    which is executed as an isolated, containerized unit of compute.
     """
-    return f"hello {name}!"
+    return f"Hello, {name}!"
 
 
-@task
+@task()
 def greeting_length(greeting: str) -> int:
     """A task the counts the length of a greeting."""
     return len(greeting)
 
+
 @workflow
-def wf(name: str = "union") -> typing.Tuple[str, int]:
+def wf(name: str = "world") -> typing.Tuple[str, int]:
     """Declare workflow called `wf`.
 
-    The @workflow decorator defines an execution graph that is composed of tasks
-    and potentially sub-workflows. In this simple example, the workflow is
-    composed of just one task.
+    The @workflow decorator defines an execution graph that is composed of
+    tasks and potentially sub-workflows. In this simple example, the workflow
+    is composed of just one task.
 
     There are a few important things to note about workflows:
     - Workflows are a domain-specific language (DSL) for creating execution
@@ -40,6 +41,6 @@ def wf(name: str = "union") -> typing.Tuple[str, int]:
 
 
 if __name__ == "__main__":
-    # Execute the workflow, simply by invoking it like a function and passing in
+    # Execute the workflow by invoking it like a function and passing in
     # the necessary parameters
-    print(f"Running wf() { wf(name='passengers') }")
+    print(f"Running wf() {wf(name='passengers')}")
