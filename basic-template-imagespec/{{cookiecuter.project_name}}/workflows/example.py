@@ -20,7 +20,7 @@ For more information, see the
 """
 
 # image_definition = ImageSpec(
-#    name="flytekit",  # rename this to your docker image name
+#    name="basic-example",  # rename this to your docker image name
 #    # the base image that flytekit will use to build your image
 #    base_image="ghcr.io/flyteorg/flytekit:py3.11-1.10.2",
 #    packages=["flytekit>=1.6.0"],  # packages to add to the base image
