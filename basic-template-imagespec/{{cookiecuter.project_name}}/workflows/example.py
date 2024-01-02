@@ -21,12 +21,12 @@ For more information, see the
 
 # image_definition = ImageSpec(
 #    name="flytekit",  # rename this to your docker image name
-#    base_image="ghcr.io/flyteorg/flytekit:py3.11-1.10.2",
 #    # the base image that flytekit will use to build your image
+#    base_image="ghcr.io/flyteorg/flytekit:py3.11-1.10.2",
 #    packages=["flytekit>=1.6.0"],  # packages to add to the base image
 #    registry="ghcr.io/unionai-oss", # registry your image will be pushed to
-#    python_version="3.11"
 #    # the python version; optional if not different from the base image
+#    python_version="3.11"
 # )
 
 
