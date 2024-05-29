@@ -1,0 +1,3 @@
+unionai
+flytekitplugins-envd
+-r image-requirements.txt
