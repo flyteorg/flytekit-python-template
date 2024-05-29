@@ -8,7 +8,7 @@ Compiled images for all templates can be found in our [ghcr.io registry](https:/
 
 ### ImageSpec vs Dockerfile
 
-Flytekit uses the `basic-template-imagespec` template by default when you initialize a new project with `pyflyte init`. That template uses [ImageSpec](https://docs.flyte.org/projects/cookbook/en/latest/auto_examples/customizing_dependencies/image_spec.html#image-spec-example), which builds Docker images without a Dockerfile, so doesn't contain a Dockerfile or `docker-build.sh` script.
+Flytekit uses the `basic-template-imagespec` template by default when you initialize a new project with `pyflyte init`. That template uses [ImageSpec](https://docs.flyte.org/en/latest/user_guide/customizing_dependencies/imagespec.html), which builds Docker images without a Dockerfile, so doesn't contain a Dockerfile or `docker-build.sh` script.
 
 However, some templates in this repository contain a Dockerfile and `docker-build.sh` script that you can use to build a Docker image for your Flyte project:
 
