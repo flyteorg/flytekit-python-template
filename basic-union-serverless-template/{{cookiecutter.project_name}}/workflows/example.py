@@ -22,7 +22,7 @@ image_spec = ImageSpec(
     #   (for example, for GHCR, make sure the image is public)
     #
     # Only needed for BYOC.
-    # On Serverless, Images are stored in Union's own container registry.
+    # On Serverless, images are stored in Union's own container registry.
     # registry="ghcr.io/<my-github-org>"
 
     # Python version of the image. Use default python in the base image if None.
