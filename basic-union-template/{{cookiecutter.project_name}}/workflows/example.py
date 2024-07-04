@@ -1,6 +1,6 @@
 """Basic Union workflow template."""
 
-from unionai import task, workflow, ImageSpec
+from union import task, workflow, ImageSpec
 
 # ImageSpec defines the container image used for the Kubernetes pods that run the tasks in Union.
 image_spec = ImageSpec(
@@ -20,7 +20,7 @@ image_spec = ImageSpec(
     #
     # Make sure that:
     #
-    # * You subsitutue the actual name of the registry here.
+    # * You substitute the actual name of the registry here.
     #   (for example if you are using GitHub's GHCR, you would
     #   use "https://ghcr.io/<your-github-org>").
     #
