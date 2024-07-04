@@ -22,7 +22,7 @@ image_spec = ImageSpec(
     #
     # * You substitute the actual name of the registry here.
     #   (for example if you are using GitHub's GHCR, you would
-    #   use "https://ghcr.io/<your-github-org>").
+    #   use "ghcr.io/<my-github-org>").
     #
     # * You have Docker installed locally and are logged into the registry.
     #
