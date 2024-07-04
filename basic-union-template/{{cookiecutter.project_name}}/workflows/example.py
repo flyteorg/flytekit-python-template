@@ -1,6 +1,6 @@
 """Basic Union workflow template."""
 
-from union import task, workflow, ImageSpec
+from flytekit import task, workflow, ImageSpec
 
 # ImageSpec defines the container image used for the Kubernetes pods that run the tasks in Union.
 image_spec = ImageSpec(
