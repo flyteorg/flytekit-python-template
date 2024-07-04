@@ -1,4 +1,4 @@
-"""Basic Union BYOC workflow template."""
+"""Basic Union workflow template."""
 
 from unionai import task, workflow, ImageSpec
 
@@ -6,7 +6,7 @@ from unionai import task, workflow, ImageSpec
 image_spec = ImageSpec(
 
     # The name of the image
-    name="basic-union-byoc-image",
+    name="basic-union-image",
 
     # The base image on which this image is based
     base_image="ghcr.io/flyteorg/flytekit:py3.11-latest",
@@ -15,16 +15,23 @@ image_spec = ImageSpec(
     requirements="requirements.txt",
 
     # Container registry to which the image will be pushed.
+    #
+    # ON UNION BYOC UNCOMMENT THIS PARAMETER!
+    #
     # Make sure that:
+    #
     # * You subsitutue the actual name of the registry here.
-    #   If you are using GHCR, substitute <my-github-org> with your github org name.
-    # * You have Docker installed locally and are logged into this registry.
+    #   (for example if you are using GitHub's GHCR, you would
+    #   use "https://ghcr.io/<your-github-org>").
+    #
+    # * You have Docker installed locally and are logged into the registry.
+    #
     # * The image, once pushed to the registry, is accessible to Union
     #   (for example, for GHCR, make sure the image is public)
     #
-    # Only needed for BYOC.
-    # On Serverless, images are stored in Union's own container registry.
-    registry="ghcr.io/<my-github-org>"
+    # This parameter is only needed for BYOC. On Serverless, images are stored
+    # transparently in Union's own container registry.
+    # registry="<my-registry>"
 
     # Python version of the image. Use default python in the base image if None.
     # python_version="3.11"

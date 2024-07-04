@@ -1,2 +1,0 @@
-unionai
-flytekitplugins-envd
