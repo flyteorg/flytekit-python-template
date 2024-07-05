@@ -8,9 +8,6 @@ image_spec = ImageSpec(
     # The name of the image
     name="basic-union-image",
 
-    # The base image on which this image is based
-    base_image="ghcr.io/flyteorg/flytekit:py3.11-latest",
-
     # Use the requirements.txt to define the packages to be installed in the the image
     requirements="requirements.txt",
 
@@ -33,14 +30,16 @@ image_spec = ImageSpec(
     # transparently in Union's own container registry.
     # registry="<my-registry>"
 
+    # The base image on which this image is based
+    # base_image="<some-registry>/<base-image>"
+
     # Python version of the image. Use default python in the base image if None.
     # python_version="3.11"
 
-    # Plugin used to build the image locally.
+    # Plugin used to build the image locally in Union BYOC.
     # Uses flytekitplugin_envd by default.
     #
-    # Only applies to BYOC.
-    # On Serverless, Images are built by Union's ImageBuilder service.
+    # This only applies to BYOC. On Serverless, images are built by Union's ImageBuilder service.
     # builder="flytekitplugins_envd"
 
     # Source root of the image.
