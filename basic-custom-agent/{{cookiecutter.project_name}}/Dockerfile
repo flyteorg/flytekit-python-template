@@ -18,7 +18,7 @@ RUN pip install --no-cache-dir \
 RUN pip install --no-cache-dir git+https://github.com/flyteorg/flytekit.git@master
 
 # Copy and install the plugin
-COPY flytekit-{{cookiecutter.project_name}} /{{cookiecutter.project_name}}
+COPY {{cookiecutter.project_name}} /flytekit-{{cookiecutter.project_name}}
 RUN pip install --no-cache-dir /flytekit-{{cookiecutter.project_name}}
 
 # Cleanup
