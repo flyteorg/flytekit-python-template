@@ -8,10 +8,10 @@ REGISTRY=""
 # SET the appname here
 PROJECT_NAME="{{ cookiecutter.project_name }}"
 
-while getopts a:r:v:h flag
+while getopts p:r:v:h flag
 do
     case "${flag}" in
-        a) PROJECT_NAME=${OPTARG};;
+        p) PROJECT_NAME=${OPTARG};;
         r) REGISTRY=${OPTARG};;
         v) VERSION=${OPTARG};;
         h) echo "Usage: ${0} [-h|[-p <project_name>][-r <registry_name>][-v <version>]]"

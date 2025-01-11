@@ -8,7 +8,7 @@ REGISTRY=""
 # SET the appname here
 PROJECT_NAME="{{ cookiecutter.project_name }}"
 
-while getopts a:r:v:h flag
+while getopts p:r:v:h flag
 do
     case "${flag}" in
         p) PROJECT_NAME=${OPTARG};;
