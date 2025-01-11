@@ -17,9 +17,12 @@ RUN pip install --no-cache-dir \
 # Install Flytekit from GitHub
 RUN pip install --no-cache-dir git+https://github.com/flyteorg/flytekit.git@master
 
-# Copy and install the plugin
-COPY {{cookiecutter.project_name}} /flytekit-{{cookiecutter.project_name}}
-RUN pip install --no-cache-dir /flytekit-{{cookiecutter.project_name}}
+# Copy and install the bigquery plugin
+COPY flytekit-bigquery /flytekit-bigquery
+RUN pip install --no-cache-dir /flytekit-bigquery
+
+COPY flytekit-openai /flytekit-openai
+RUN pip install --no-cache-dir /flytekit-openai
 
 # Cleanup
 RUN apt-get purge -y build-essential git \

@@ -22,7 +22,7 @@ docker buildx build --platform linux/amd64 -t localhost:30000/flyteagent:custom-
 docker run -it localhost:30000/flyteagent:custom-agent
 ```
 
-4. Check the logs (sensor is created by flytekit, bigquery is created by the custom agent)
+4. Check the logs (sensor is created by flytekit, bigquery and openai is created by the custom agent)
 ```
 (dev) future@outlier ~ % docker run -it localhost:30000/flyteagent:custom-agent
     
@@ -34,6 +34,7 @@ Starting up the server to expose the prometheus metrics...
 ┃ Agent Name     ┃ Support Task Types            ┃ Is Sync ┃
 ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━┩
 │ Sensor         │ sensor (v0)                   │ False   │
+│ ChatGPT Agent  │ chatgpt (v0)                  │ True    │
 │ Bigquery Agent │ bigquery_query_job_task (v0)  │ False   │
 └────────────────┴───────────────────────────────┴─────────┘
 ```
