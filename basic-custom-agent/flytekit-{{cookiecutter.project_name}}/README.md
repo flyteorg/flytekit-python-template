@@ -14,17 +14,17 @@ BigQuery's agent registration is triggered [here](https://github.com/Future-Outl
 > In the following command, `localhost:30000` is the Docker registry that ships with the Flyte demo cluster. Use it or replace it with a registry where you have push permissions.
 
 ```bash
-docker buildx build --platform linux/amd64 -t localhost:30000/flyteagent:custom-bigquery -f Dockerfile .
+docker buildx build --platform linux/amd64 -t localhost:30000/flyteagent:custom-agent -f Dockerfile .
 ```
 
 3. Test the image:
 ```bash
-docker run -it localhost:30000/flyteagent:custom-bigquery
+docker run -it localhost:30000/flyteagent:custom-agent
 ```
 
 4. Check the logs (sensor is created by flytekit, bigquery is created by the custom agent)
 ```
-(dev) future@outlier ~ % docker run -it localhost:30000/flyteagent:custom-bigquery
+(dev) future@outlier ~ % docker run -it localhost:30000/flyteagent:custom-agent
     
 WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
 🚀 Starting the agent service...
