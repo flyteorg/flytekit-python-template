@@ -3,7 +3,7 @@
 import union
 
 image_spec = union.ImageSpec(
-    name="standard-union-template-image",
+    name="first-project-image",
     requirements="uv.lock",
 )
 
