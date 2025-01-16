@@ -1,4 +1,4 @@
-"""Union workflows"""
+"""Workflows"""
 
 import union
 
