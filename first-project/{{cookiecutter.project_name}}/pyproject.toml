@@ -1,0 +1,7 @@
+[project]
+name = "standard-union-template"
+version = "0.1.0"
+description = "Standard Union project template"
+readme = "README.md"
+requires-python = ">=3.9,<3.13"
+dependencies = ["union"]

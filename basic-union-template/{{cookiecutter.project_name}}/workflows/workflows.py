@@ -1,15 +1,15 @@
-"""Basic Union workflow template."""
+"""Union workflows"""
 
-from flytekit import task, workflow, ImageSpec
+import union
 
 # ImageSpec defines the container image used for the Kubernetes pods that run the tasks in Union.
-image_spec = ImageSpec(
+image_spec = union.ImageSpec(
 
     # The name of the image
     name="basic-union-image",
 
     # Use the requirements.txt to define the packages to be installed in the the image
-    requirements="requirements.txt",
+    requirements="uv.lock",
 
     # Container registry to which the image will be pushed.
     #
@@ -87,12 +87,12 @@ image_spec = ImageSpec(
     # tag_format = "{spec_hash}-dev"
 )
 
-@task(container_image=image_spec)
+@union.task(container_image=image_spec)
 def say_hello(name: str) -> str:
     return f"Hello, {name}!"
 
 
-@workflow
+@union.workflow
 def wf(name: str = "world") -> str:
     greeting = say_hello(name=name)
     return greeting
