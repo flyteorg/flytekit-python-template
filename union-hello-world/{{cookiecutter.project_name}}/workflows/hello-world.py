@@ -1,11 +1,9 @@
-"""Tasks"""
-
 import union
 
 image_spec = union.ImageSpec(
 
     # The name of the image.
-    name="first-project-image",
+    name="hello-world-image",
 
     # Use the `uv.lock` file in this project to define the dependencies included in the image.
     requirements="uv.lock",
@@ -26,5 +24,10 @@ image_spec = union.ImageSpec(
 )
 
 @union.task(container_image=image_spec)
-def task_1(name: str) -> str:
+def hello_world_task(name: str) -> str:
     return f"Hello, {name}!"
+
+@union.workflow
+def hello_world_wf(name: str = "world") -> str:
+    greeting = say_hello(name=name)
+    return greeting
