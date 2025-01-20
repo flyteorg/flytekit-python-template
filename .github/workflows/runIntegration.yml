@@ -10,19 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
         tags: true
         token: ${{ secrets.FLYTE_BOT_PAT }}
-
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v1
       with:
         registry: ghcr.io
         username: ${{ secrets.FLYTE_BOT_USERNAME }}
         password: ${{ secrets.FLYTE_BOT_PAT }}
-
     - name: Iterate through top level directories and build Docker images
       env:
         ACCESS_TOKEN: ${{ secrets.FLYTE_BOT_PAT }}
@@ -73,7 +74,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
     - name: Run integration tests
       env:
         host: ${{ secrets.FLYTE_HOST }}
