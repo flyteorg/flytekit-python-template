@@ -1,7 +1,7 @@
 [project]
-name = "basic-union-template"
+name = "union-production"
 version = "0.1.0"
-description = "Basic Union template"
+description = "A Union production project"
 readme = "README.md"
 requires-python = ">=3.9,<3.13"
 dependencies = ["union"]
