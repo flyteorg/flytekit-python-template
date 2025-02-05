@@ -10,7 +10,7 @@ image_spec = union.ImageSpec(
     # The name of the image. This image will be used byt he say_hello task
     name="say-hello-image",
 
-    # Lock file to use to determine dependencies to install in image
+    # Lock file with dependencies to install in image
     requirements="uv.lock",
 )
 

@@ -10,10 +10,10 @@ image_spec = union.ImageSpec(
     # The name of the image. This image will be used by the say_hello task
     name="say-hello-image",
 
-    # List of packages to install on the image
-    packages=["union"],
+    # Lock file with dependencies to install in image
+    requirements="uv.lock"
 )
 
 @union.task(container_image=image_spec)
 def say_hello(name: str) -> str:
-    return f"Hello, {name}!"
+    return f"Hello register, {name}!"
