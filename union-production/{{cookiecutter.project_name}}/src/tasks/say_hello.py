@@ -11,7 +11,7 @@ image_spec = union.ImageSpec(
     name="say-hello-image",
 
     # List of packages to install on the image
-    packages=-["union"],
+    packages=["union"],
 )
 
 @union.task(container_image=image_spec)
