@@ -1,0 +1,7 @@
+[project]
+name = "union-simple"
+version = "0.1.0"
+description = "A simple Union project"
+readme = "README.md"
+requires-python = ">=3.9,<3.13"
+dependencies = ["union"]
