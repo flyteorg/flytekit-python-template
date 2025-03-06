@@ -1,3 +1,3 @@
 # {{ cookiecutter.project_name }}
 
-A simple Union project.
+A simple Flyte project.

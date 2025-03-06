@@ -1,11 +1,8 @@
 """Hello World"""
 
-import union
+import flytekit as fl
 
-image_spec = union.ImageSpec(
-
-    # Build the image using Union's built-in cloud builder (not locally on your machine)
-    builder="union",
+image_spec = fl.ImageSpec(
 
     # The name of the image. This image will be used byt he say_hello task
     name="say-hello-image",
@@ -14,11 +11,11 @@ image_spec = union.ImageSpec(
     requirements="uv.lock",
 )
 
-@union.task(container_image=image_spec)
+@fl.task(container_image=image_spec)
 def say_hello(name: str) -> str:
     return f"Hello, {name}!"
 
-@union.workflow
+@fl.workflow
 def hello_world_wf(name: str = "world") -> str:
     greeting = say_hello(name=name)
     return greeting

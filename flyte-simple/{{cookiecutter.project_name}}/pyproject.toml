@@ -1,7 +1,7 @@
 [project]
-name = "union-simple"
+name = "flyte-simple"
 version = "0.1.0"
-description = "A simple Union project"
+description = "A simple Flyte project"
 readme = "README.md"
 requires-python = ">=3.9,<3.13"
-dependencies = ["union"]
+dependencies = ["flytekit"]
