@@ -1,4 +1,4 @@
-"""Hello World"""
+# Hello World
 
 import union
 from tasks.say_hello import say_hello

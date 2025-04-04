@@ -1,18 +1,18 @@
-"""Say Hello"""
+# Say Hello
 
 import union
 
 image_spec = union.ImageSpec(
-
-    # Build the image using Union's built-in cloud builder (not locally on your machine)
-    builder="union",
-
-    # The name of the image. This image will be used by the say_hello task
+    # The name of the image. This image will be used by the `say_hello`` task.
     name="say-hello-image",
 
-    # Lock file with dependencies to install in image
+    # Lock file with dependencies to be installed in the image.
     requirements="uv.lock"
+
+    # Build the image using Union's built-in cloud builder (not locally on your machine).
+    builder="union",
 )
+
 
 @union.task(container_image=image_spec)
 def say_hello(name: str) -> str:
