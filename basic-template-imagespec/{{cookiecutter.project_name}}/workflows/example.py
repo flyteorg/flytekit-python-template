@@ -50,7 +50,7 @@ def wf(name: str = "world") -> typing.Tuple[str, int]:
 
     The @workflow decorator defines an execution graph that is composed of
     tasks and potentially sub-workflows. In this simple example, the workflow
-    is composed of just one task.
+    is composed of two tasks, including `say_hello` and `greeting_length`.
 
     There are a few important things to note about workflows:
     - Workflows are a domain-specific language (DSL) for creating execution
